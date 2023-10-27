@@ -5,6 +5,7 @@ import android.os.SystemClock
 import android.util.Log
 import per.pslilysm.filecleaner.service.FileScanResult
 import per.pslilysm.filecleaner.service.FileScanService
+import per.pslilysm.filecleaner.service.FileScanServiceConfig
 import pers.pslilysm.sdk_library.extention.throwIfMainThread
 import java.io.File
 import java.util.concurrent.ExecutorService
@@ -19,7 +20,7 @@ import kotlin.math.roundToInt
  * Created on 2023/10/24 14:40
  * @since 1.0
  */
-class FileScanServiceImpl: FileScanService {
+class FileScanServiceImpl : FileScanService {
 
     companion object {
         private const val TAG = "FileScanServiceImpl"
@@ -31,7 +32,9 @@ class FileScanServiceImpl: FileScanService {
 
     private fun initIOExecutorsIfNeed() {
         if (!this::ioExecutors.isInitialized || ioExecutors.isShutdown) {
-            ioExecutors = Executors.newFixedThreadPool((Runtime.getRuntime().availableProcessors() * 3.25).roundToInt()) { r: Runnable? ->
+            ioExecutors = Executors.newFixedThreadPool(
+                (Runtime.getRuntime().availableProcessors() * 3.25).roundToInt()
+            ) { r: Runnable? ->
                 Thread(r, "fss-io-" + ioThreadNum.incrementAndGet() + "-thread")
             }
         }
@@ -76,8 +79,13 @@ class FileScanServiceImpl: FileScanService {
                     }
                 }
                 for (lFile in listPair.second) {
-                    if (!lFile.name.contains(".")) {
+                    val fileExt = lFile.extension
+                    if (fileExt.isEmpty()) {
                         fileScanResult.noExtFileQueue.offer(lFile)
+                    } else if (FileScanServiceConfig.knownFileExtSet.contains(lFile.extension)) {
+                        fileScanResult.knownExtFileQueue.offer(lFile)
+                    } else {
+                        fileScanResult.unknownExtFileQueue.offer(lFile)
                     }
                 }
             }

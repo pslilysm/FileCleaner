@@ -17,6 +17,8 @@ data class FileScanResult(
     val emptyDirQueue: Queue<File> = ConcurrentLinkedQueue(),
     val largeFileQueue: Queue<File> = ConcurrentLinkedQueue(),
     val noExtFileQueue: Queue<File> = ConcurrentLinkedQueue(),
+    val knownExtFileQueue: Queue<File> = ConcurrentLinkedQueue(),
+    val unknownExtFileQueue: Queue<File> = ConcurrentLinkedQueue(),
     val scanTaskNum: AtomicInteger = AtomicInteger(),
     val countDownLatch: CountDownLatch = CountDownLatch(1),
 )

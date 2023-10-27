@@ -15,9 +15,9 @@ import kotlinx.coroutines.withContext
 import per.pslilysm.filecleaner.adapter.ScanResultAdapter
 import per.pslilysm.filecleaner.dagger.FCAppComponent
 import per.pslilysm.filecleaner.databinding.ActivityMainBinding
+import per.pslilysm.filecleaner.entity.FileClassic
 import per.pslilysm.filecleaner.service.FileScanService
 import pers.pslilysm.sdk_library.extention.dip2px
-import java.io.File
 import javax.inject.Inject
 
 /**
@@ -60,12 +60,18 @@ class MainActivity : AppCompatActivity() {
                 if (allGranted) {
                     lifecycleScope.launch(Dispatchers.IO) {
                         val scanResult = fileScanService.startScan()
-                        val fileList = ArrayList<File>()
-                        fileList.addAll(scanResult.emptyDirQueue.toMutableList().apply { sort() })
-                        fileList.addAll(scanResult.noExtFileQueue.toMutableList().apply { sort() })
-                        Log.i("MainActivity", "onCreate: ${fileList.size}")
+                        val dataList = ArrayList<Any>()
+                        dataList.add(FileClassic("空文件夹"))
+                        dataList.addAll(scanResult.emptyDirQueue.toMutableList().apply { sort() })
+                        dataList.add(FileClassic("无后缀文件"))
+                        dataList.addAll(scanResult.noExtFileQueue.toMutableList().apply { sort() })
+                        dataList.add(FileClassic("已知后缀文件"))
+                        dataList.addAll(scanResult.knownExtFileQueue.toMutableList().apply { sort() })
+                        dataList.add(FileClassic("未知后缀文件"))
+                        dataList.addAll(scanResult.unknownExtFileQueue.toMutableList().apply { sort() })
+                        Log.i("MainActivity", "onCreate: ${dataList.size}")
                         withContext(Dispatchers.Main) {
-                            val adapter = ScanResultAdapter(fileList)
+                            val adapter = ScanResultAdapter(dataList)
                             binding.rvMain.adapter = adapter
                         }
                     }
