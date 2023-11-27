@@ -1,24 +1,23 @@
 package per.pslilysm.filecleaner.service
 
 import java.io.File
-import java.util.Queue
+import java.nio.file.Files
 import java.util.concurrent.ConcurrentLinkedQueue
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicLong
 
 /**
  * 文件扫描结果
  *
  * @author caoxuedong
- * Created on 2023/10/24 16:36
+ * Created on 2023/11/27 17:49
  * @since 1.0
  */
 data class FileScanResult(
-    val emptyDirQueue: Queue<File> = ConcurrentLinkedQueue(),
-    val largeFileQueue: Queue<File> = ConcurrentLinkedQueue(),
-    val noExtFileQueue: Queue<File> = ConcurrentLinkedQueue(),
-    val knownExtFileQueue: Queue<File> = ConcurrentLinkedQueue(),
-    val unknownExtFileQueue: Queue<File> = ConcurrentLinkedQueue(),
-    val scanTaskNum: AtomicInteger = AtomicInteger(),
-    val countDownLatch: CountDownLatch = CountDownLatch(1),
-)
+    val fileQueue: ConcurrentLinkedQueue<File> = ConcurrentLinkedQueue(),
+    val queueFileSize: AtomicLong = AtomicLong(0)
+) {
+    fun offerFileAndAddFileSize(file: File) {
+        fileQueue.offer(file)
+        queueFileSize.getAndAdd(Files.size(file.toPath()))
+    }
+}

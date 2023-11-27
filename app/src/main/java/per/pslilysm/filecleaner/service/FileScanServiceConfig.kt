@@ -10,20 +10,35 @@ package per.pslilysm.filecleaner.service
 interface FileScanServiceConfig {
 
     companion object {
-        val knownFileExtSet = hashSetOf(
-            // 文档
-            "txt", "doc", "docx", "xls", "xlsx", "pdf", "xmind", "ppt", "pptx",
-            // 压缩
-            "zip", "7z", "rar",
-            // 图像
-            "bmg", "jpg", "png", "gif", "tif", "pic",
-            // 音频
-            "wav", "mp3",
-            // 视频
-            "mp4",
-            // 其他
-            "bak",
-            )
+        /**
+         * Image File Suffix Set
+         */
+        val imageFileExtSet = hashSetOf("bmb", "jpg", "png", "gif", "tif", "pic")
+
+        /**
+         * Video File Suffix Set
+         */
+        val videoFileExtSet = hashSetOf("mp4")
+
+        /**
+         * Audio File Suffix Set
+         */
+        val audioFileExtSet = hashSetOf("wav", "mp3")
+
+        /**
+         * Document File Suffix Set
+         */
+        val documentFileExtSet = hashSetOf("txt", "doc", "docx", "xls", "xlsx", "pdf", "xmind", "ppt", "pptx")
+
+        /**
+         * Apk File Suffix
+         */
+        val apkFileExt = "apk"
+
+        /**
+         * Compressed File Suffix Set
+         */
+        val compressedFileExt = hashSetOf("zip", "7z", "rar")
     }
 
 }

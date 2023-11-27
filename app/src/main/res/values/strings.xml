@@ -1,3 +1,18 @@
 <resources>
-    <string name="app_name">FileCleaner</string>
+    <string name="app_name">TD Storage Clean</string>
+
+    <!--    Common -->
+    <string name="common_internal_storage">Internal Storage</string>
+    <string name="common_used_lc">used</string>
+    <string name="common_image">Image</string>
+    <string name="common_video">Video</string>
+    <string name="common_audio">Audio</string>
+    <string name="common_document">Document</string>
+    <string name="common_apk_file">Apk File</string>
+    <string name="common_compressed_file">Compressed File</string>
+    <string name="common_empty_dir">Empty Folder</string>
+    <string name="common_no_ext_file">No Suffix File</string>
+    <string name="common_unknown_ext_file">Unknown Suffix File</string>
+    <string name="common_other">Other</string>
+
 </resources>

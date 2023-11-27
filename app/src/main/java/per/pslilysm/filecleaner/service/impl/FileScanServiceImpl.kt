@@ -1,11 +1,12 @@
 package per.pslilysm.filecleaner.service.impl
 
 import android.os.Environment
+import android.os.StatFs
 import android.os.SystemClock
 import android.util.Log
-import per.pslilysm.filecleaner.service.FileScanResult
 import per.pslilysm.filecleaner.service.FileScanService
 import per.pslilysm.filecleaner.service.FileScanServiceConfig
+import per.pslilysm.filecleaner.service.TotalFileScanResult
 import pers.pslilysm.sdk_library.extention.throwIfMainThread
 import java.io.File
 import java.util.concurrent.ExecutorService
@@ -40,18 +41,21 @@ class FileScanServiceImpl : FileScanService {
         }
     }
 
-    override fun startScan(): FileScanResult {
+    override fun startScan(): TotalFileScanResult {
         throwIfMainThread()
         Log.i(TAG, "startScan: prepare")
         val l = SystemClock.elapsedRealtime()
         initIOExecutorsIfNeed()
-        val fileScanResult = FileScanResult()
+        val totalFileScanResult = TotalFileScanResult()
         ioExecutors.execute {
-            processDir(Environment.getExternalStorageDirectory(), fileScanResult)
+            processDir(Environment.getExternalStorageDirectory(), totalFileScanResult)
         }
-        fileScanResult.countDownLatch.await()
+        totalFileScanResult.countDownLatch.await()
         Log.i(TAG, "startScan: done, cost ${SystemClock.elapsedRealtime() - l}ms")
-        return fileScanResult
+        val statFs = StatFs(Environment.getExternalStorageDirectory().absolutePath)
+        totalFileScanResult.storageTotalSize = statFs.blockCountLong * statFs.blockSizeLong
+        totalFileScanResult.calcSize()
+        return totalFileScanResult
     }
 
     override fun stopScanIfNeed() {
@@ -61,19 +65,18 @@ class FileScanServiceImpl : FileScanService {
         }
     }
 
-    private fun processDir(dir: File, fileScanResult: FileScanResult) {
+    private fun processDir(dir: File, totalFileScanResult: TotalFileScanResult) {
         Log.d(TAG, "processDir() called with: dir = $dir")
-        fileScanResult.scanTaskNum.incrementAndGet()
+        totalFileScanResult.scanTaskNum.incrementAndGet()
         try {
             val listFiles = dir.listFiles()
             if (listFiles.isNullOrEmpty()) {
-                fileScanResult.emptyDirQueue.offer(dir)
+                totalFileScanResult.emptyDirScanResult.fileQueue.offer(dir)
             } else {
                 val listPair = listFiles.partition { it.isDirectory }
                 for (lDir in listPair.first) {
                     try {
-//                        Thread.sleep(50)
-                        ioExecutors.execute { processDir(lDir, fileScanResult) }
+                        ioExecutors.execute { processDir(lDir, totalFileScanResult) }
                     } catch (e: Exception) {
                         Log.e(TAG, "processDir: ", e)
                     }
@@ -81,18 +84,46 @@ class FileScanServiceImpl : FileScanService {
                 for (lFile in listPair.second) {
                     val fileExt = lFile.extension
                     if (fileExt.isEmpty()) {
-                        fileScanResult.noExtFileQueue.offer(lFile)
-                    } else if (FileScanServiceConfig.knownFileExtSet.contains(lFile.extension)) {
-                        fileScanResult.knownExtFileQueue.offer(lFile)
+                        totalFileScanResult.noExtScanResult.offerFileAndAddFileSize(lFile)
+                    } else if (FileScanServiceConfig.imageFileExtSet.contains(lFile.extension)) {
+                        totalFileScanResult.imageScanResult.offerFileAndAddFileSize(lFile)
+                    } else if (FileScanServiceConfig.videoFileExtSet.contains(lFile.extension)) {
+                        totalFileScanResult.videoScanResult.offerFileAndAddFileSize(lFile)
+                    } else if (FileScanServiceConfig.audioFileExtSet.contains(lFile.extension)) {
+                        totalFileScanResult.audioScanResult.offerFileAndAddFileSize(lFile)
+                    } else if (FileScanServiceConfig.documentFileExtSet.contains(lFile.extension)) {
+                        totalFileScanResult.documentScanResult.offerFileAndAddFileSize(lFile)
+                    } else if (FileScanServiceConfig.apkFileExt == lFile.extension) {
+                        totalFileScanResult.apkFileScanResult.offerFileAndAddFileSize(lFile)
+                    } else if (FileScanServiceConfig.compressedFileExt.contains(lFile.extension)) {
+                        totalFileScanResult.compressedFileScanResult.offerFileAndAddFileSize(lFile)
                     } else {
-                        fileScanResult.unknownExtFileQueue.offer(lFile)
+                        totalFileScanResult.unknownExtScanResult.offerFileAndAddFileSize(lFile)
                     }
                 }
             }
         } finally {
-            if (fileScanResult.scanTaskNum.decrementAndGet() <= 0) {
-                fileScanResult.countDownLatch.countDown()
+            if (totalFileScanResult.scanTaskNum.decrementAndGet() <= 0) {
+                totalFileScanResult.countDownLatch.countDown()
             }
+        }
+    }
+
+    private fun TotalFileScanResult.calcSize() {
+        if (Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()) {
+            val externalSf = StatFs(Environment.getExternalStorageDirectory().path)
+            this.storageAvailableSize = externalSf.availableBytes
+            this.storageTotalSize = externalSf.totalBytes
+            this.storageUsedSize = this.storageTotalSize - this.storageAvailableSize
+            this.otherFileSize = this.storageUsedSize -
+                    (this.imageScanResult.queueFileSize.get() +
+                            this.videoScanResult.queueFileSize.get() +
+                            this.audioScanResult.queueFileSize.get() +
+                            this.documentScanResult.queueFileSize.get() +
+                            this.apkFileScanResult.queueFileSize.get() +
+                            this.compressedFileScanResult.queueFileSize.get() +
+                            this.noExtScanResult.queueFileSize.get() +
+                            this.unknownExtScanResult.queueFileSize.get())
         }
     }
 

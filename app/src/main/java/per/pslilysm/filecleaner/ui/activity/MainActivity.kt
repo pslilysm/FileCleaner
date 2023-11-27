@@ -1,24 +1,22 @@
 package per.pslilysm.filecleaner.ui.activity
 
-import android.graphics.Rect
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import per.pslilysm.filecleaner.adapter.ScanResultAdapter
 import per.pslilysm.filecleaner.dagger.FCAppComponent
 import per.pslilysm.filecleaner.databinding.ActivityMainBinding
-import per.pslilysm.filecleaner.entity.FileClassic
 import per.pslilysm.filecleaner.service.FileScanService
-import pers.pslilysm.sdk_library.extention.dip2px
+import per.pslilysm.filecleaner.service.TotalFileScanResult
+import pers.pslilysm.sdk_library.extention.autoFormatFileSize
 import javax.inject.Inject
+
 
 /**
  * 主页面
@@ -27,7 +25,7 @@ import javax.inject.Inject
  * Created on 2023/10/23 16:03
  * @since 1.0
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -38,41 +36,24 @@ class MainActivity : AppCompatActivity() {
         FCAppComponent.instance.injectMainActivity(this)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater).also { setContentView(it.root) }
-        binding.rvMain.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(
-                outRect: Rect,
-                view: View,
-                parent: RecyclerView,
-                state: RecyclerView.State
-            ) {
-                super.getItemOffsets(outRect, view, parent, state)
-                val pos = parent.getChildAdapterPosition(view)
-                if (pos == 0) {
-                    outRect.top = 8f.dip2px()
-                } else if (pos == state.itemCount - 1) {
-                    outRect.bottom = 8f.dip2px()
-                }
-            }
-        })
+        binding.llMainImageSizeContainer.setOnClickListener(this)
+        binding.llMainVideoSizeContainer.setOnClickListener(this)
+        binding.llMainAudioSizeContainer.setOnClickListener(this)
+        binding.llMainDocumentSizeContainer.setOnClickListener(this)
+        binding.llMainApkFileSizeContainer.setOnClickListener(this)
+        binding.llMainCompressedFileSizeContainer.setOnClickListener(this)
+        binding.llMainEmptyDirSizeContainer.setOnClickListener(this)
+        binding.llMainNoExtFileSizeContainer.setOnClickListener(this)
+        binding.llMainUnknownExtFileSizeContainer.setOnClickListener(this)
+        binding.llMainOtherSizeContainer.setOnClickListener(this)
         XXPermissions.with(this)
             .permission(Permission.MANAGE_EXTERNAL_STORAGE)
             .request { _, allGranted ->
                 if (allGranted) {
                     lifecycleScope.launch(Dispatchers.IO) {
                         val scanResult = fileScanService.startScan()
-                        val dataList = ArrayList<Any>()
-                        dataList.add(FileClassic("空文件夹"))
-                        dataList.addAll(scanResult.emptyDirQueue.toMutableList().apply { sort() })
-                        dataList.add(FileClassic("无后缀文件"))
-                        dataList.addAll(scanResult.noExtFileQueue.toMutableList().apply { sort() })
-                        dataList.add(FileClassic("已知后缀文件"))
-                        dataList.addAll(scanResult.knownExtFileQueue.toMutableList().apply { sort() })
-                        dataList.add(FileClassic("未知后缀文件"))
-                        dataList.addAll(scanResult.unknownExtFileQueue.toMutableList().apply { sort() })
-                        Log.i("MainActivity", "onCreate: ${dataList.size}")
                         withContext(Dispatchers.Main) {
-                            val adapter = ScanResultAdapter(dataList)
-                            binding.rvMain.adapter = adapter
+                            refreshUIWithScanResult(scanResult)
                         }
                     }
                 }
@@ -82,6 +63,27 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         fileScanService.stopScanIfNeed()
+    }
+
+    override fun onClick(v: View?) {
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun refreshUIWithScanResult(scanResult: TotalFileScanResult) {
+        binding.tvMainUsedPercentValue.text = "${scanResult.storageUsedSize * 100 / scanResult.storageTotalSize}%"
+        binding.tvMainStorageUsedSizeValue.text = scanResult.storageUsedSize.autoFormatFileSize()
+        binding.tvMainStorageTotalSizeValue.text = scanResult.storageTotalSize.autoFormatFileSize()
+        binding.tvMainImageSize.text = scanResult.imageScanResult.queueFileSize.get().autoFormatFileSize()
+        binding.tvMainVideoSize.text = scanResult.videoScanResult.queueFileSize.get().autoFormatFileSize()
+        binding.tvMainAudioSize.text = scanResult.audioScanResult.queueFileSize.get().autoFormatFileSize()
+        binding.tvMainDocumentSize.text = scanResult.documentScanResult.queueFileSize.get().autoFormatFileSize()
+        binding.tvMainApkFileSize.text = scanResult.apkFileScanResult.queueFileSize.get().autoFormatFileSize()
+        binding.tvMainCompressedFileSize.text = scanResult.compressedFileScanResult.queueFileSize.get().autoFormatFileSize()
+        binding.tvMainEmptyDirSize.text = scanResult.emptyDirScanResult.fileQueue.size.toString()
+        binding.tvMainNoExtFileSize.text = scanResult.noExtScanResult.queueFileSize.get().autoFormatFileSize()
+        binding.tvMainUnknownExtFileSize.text = scanResult.unknownExtScanResult.queueFileSize.get().autoFormatFileSize()
+        binding.tvMainOtherSize.text = scanResult.otherFileSize.autoFormatFileSize()
     }
 
 }
