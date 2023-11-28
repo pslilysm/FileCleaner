@@ -26,6 +26,7 @@ data class FileScanResultSummary(
     var storageUsedSize: Long = 0L,
     var storageAvailableSize: Long = 0L,
     var storageTotalSize: Long = 0L,
+    var scanCost: Int = 0,
 
     val scanTaskNum: AtomicInteger = AtomicInteger(),
     val countDownLatch: CountDownLatch = CountDownLatch(1),

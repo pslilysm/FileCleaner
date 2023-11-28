@@ -70,10 +70,11 @@ class FileScanServiceImpl : FileScanService {
         if (ioExecutors.isShutdown) {
             throw CancellationException("scan task has been stopped")
         }
-        Log.i(TAG, "startScan: done, cost ${SystemClock.elapsedRealtime() - l}ms")
         val statFs = StatFs(Environment.getExternalStorageDirectory().absolutePath)
         fileScanResultSummary.storageTotalSize = statFs.blockCountLong * statFs.blockSizeLong
         fileScanResultSummary.calcSize()
+        val scanCost = SystemClock.elapsedRealtime() - l
+        fileScanResultSummary.scanCost = scanCost.toInt()
         return fileScanResultSummary
     }
 

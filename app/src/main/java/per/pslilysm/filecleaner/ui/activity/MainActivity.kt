@@ -85,6 +85,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun refreshUIWithScanResult(scanResult: FileScanResultSummary) {
         val sts = scanResult.storageTotalSize
         binding.tvMainUsedPercentValue.text = "${scanResult.storageUsedSize * 100 / sts}%"
+        binding.tvMainScanCost.text = getString(R.string.scan_cost, scanResult.scanCost)
         binding.tvMainStorageUsedSizeValue.text = scanResult.storageUsedSize.autoFormatFileSize()
         binding.tvMainStorageTotalSizeValue.text = sts.autoFormatFileSize()
 

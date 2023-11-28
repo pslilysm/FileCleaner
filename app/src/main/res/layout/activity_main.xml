@@ -48,6 +48,15 @@
         app:layout_constraintStart_toEndOf="@id/tv_main_used_percent_value" />
 
     <TextView
+        android:id="@+id/tv_main_scan_cost"
+        style="@style/TextAppearance.MaterialComponents.Body2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_main_used_percent_value"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
         android:id="@+id/tv_main_storage_used_size_value"
         style="@style/TextAppearance.MaterialComponents.Body2"
         android:layout_width="wrap_content"

@@ -16,4 +16,6 @@
     <string name="common_other">Other</string>
     <string name="image_content_desc_arrow_right">arrow right</string>
 
+    <string name="scan_cost">scan cost %1$d ms</string>
+
 </resources>
