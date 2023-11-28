@@ -16,9 +16,29 @@ android {
         versionName "1.0"
     }
 
-    buildTypes {
+    android.applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach {
+            outputFileName = "TDSC-V${variant.versionName}(${variant.versionCode})-${variant.buildType.name}.apk"
+        }
+    }
+
+    signingConfigs {
         release {
-            minifyEnabled false
+            storeFile new File(getRootDir(), "ftd.jks")
+            storePassword "ftd62024"
+            keyAlias "ftd"
+            keyPassword "ftd62024"
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+        }
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
