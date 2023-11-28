@@ -2,9 +2,12 @@ package per.pslilysm.filecleaner.ui.activity
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
 import kotlinx.coroutines.Dispatchers
@@ -12,9 +15,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import per.pslilysm.filecleaner.dagger.FCAppComponent
 import per.pslilysm.filecleaner.databinding.ActivityMainBinding
+import per.pslilysm.filecleaner.service.FileScanResultSummary
 import per.pslilysm.filecleaner.service.FileScanService
-import per.pslilysm.filecleaner.service.TotalFileScanResult
 import pers.pslilysm.sdk_library.extention.autoFormatFileSize
+import java.util.concurrent.CancellationException
 import javax.inject.Inject
 
 
@@ -51,9 +55,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             .request { _, allGranted ->
                 if (allGranted) {
                     lifecycleScope.launch(Dispatchers.IO) {
-                        val scanResult = fileScanService.startScan()
-                        withContext(Dispatchers.Main) {
-                            refreshUIWithScanResult(scanResult)
+                        repeatOnLifecycle(Lifecycle.State.STARTED) {
+                            val scanResult = try {
+                                fileScanService.startScan()
+                            } catch (e: CancellationException) {
+                                Log.d("MainActivity", "onCreate: ", e)
+                                return@repeatOnLifecycle
+                            }
+                            withContext(Dispatchers.Main) {
+                                refreshUIWithScanResult(scanResult)
+                            }
                         }
                     }
                 }
@@ -70,7 +81,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun refreshUIWithScanResult(scanResult: TotalFileScanResult) {
+    private fun refreshUIWithScanResult(scanResult: FileScanResultSummary) {
         binding.tvMainUsedPercentValue.text = "${scanResult.storageUsedSize * 100 / scanResult.storageTotalSize}%"
         binding.tvMainStorageUsedSizeValue.text = scanResult.storageUsedSize.autoFormatFileSize()
         binding.tvMainStorageTotalSizeValue.text = scanResult.storageTotalSize.autoFormatFileSize()

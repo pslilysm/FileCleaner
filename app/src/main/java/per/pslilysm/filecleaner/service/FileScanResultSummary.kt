@@ -4,13 +4,13 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * 全部文件的扫描结果
+ * 文件扫描结果总结
  *
  * @author caoxuedong
  * Created on 2023/10/24 16:36
  * @since 1.0
  */
-data class TotalFileScanResult(
+data class FileScanResultSummary(
     val imageScanResult: FileScanResult = FileScanResult(),
     val videoScanResult: FileScanResult = FileScanResult(),
     val audioScanResult: FileScanResult = FileScanResult(),

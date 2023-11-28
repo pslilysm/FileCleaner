@@ -4,15 +4,19 @@ import android.os.Environment
 import android.os.StatFs
 import android.os.SystemClock
 import android.util.Log
+import per.pslilysm.filecleaner.service.FileScanResultSummary
 import per.pslilysm.filecleaner.service.FileScanService
 import per.pslilysm.filecleaner.service.FileScanServiceConfig
-import per.pslilysm.filecleaner.service.TotalFileScanResult
 import pers.pslilysm.sdk_library.extention.throwIfMainThread
+import pers.pslilysm.sdk_library.util.concurrent.ExecutorsLinkedBlockingQueue
 import java.io.File
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
+import java.util.concurrent.CancellationException
+import java.util.concurrent.RejectedExecutionException
+import java.util.concurrent.RejectedExecutionHandler
+import java.util.concurrent.ThreadFactory
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
-import kotlin.math.roundToInt
 
 /**
  * 文件扫描服务实现
@@ -29,87 +33,103 @@ class FileScanServiceImpl : FileScanService {
 
     private val ioThreadNum = AtomicInteger()
 
-    private lateinit var ioExecutors: ExecutorService
+    private lateinit var ioExecutors: ThreadPoolExecutor
 
     private fun initIOExecutorsIfNeed() {
         if (!this::ioExecutors.isInitialized || ioExecutors.isShutdown) {
-            ioExecutors = Executors.newFixedThreadPool(
-                (Runtime.getRuntime().availableProcessors() * 3.25).roundToInt()
-            ) { r: Runnable? ->
-                Thread(r, "fss-io-" + ioThreadNum.incrementAndGet() + "-thread")
+            val corePoolSize = 0
+            val maxPoolSize = Runtime.getRuntime().availableProcessors() * 10
+            val keepAliveTimeSeconds = 2
+            val maxQueueSize = maxPoolSize * 0xFF
+            val workQueue = ExecutorsLinkedBlockingQueue(maxQueueSize)
+            val threadFactory = ThreadFactory { r: Runnable? -> Thread(r, "fss-io-${ioThreadNum.incrementAndGet()}-thread") }
+            val rejectedExecutionHandler = RejectedExecutionHandler { r: Runnable, executor: ThreadPoolExecutor ->
+                if (!executor.isShutdown && workQueue.size < maxQueueSize) {
+                    executor.execute(r)
+                } else {
+                    throw RejectedExecutionException("Task $r rejected from $executor")
+                }
             }
+            ioExecutors = ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTimeSeconds.toLong(), TimeUnit.SECONDS,
+                workQueue, threadFactory, rejectedExecutionHandler)
+            workQueue.setExecutor(ioExecutors)
         }
     }
 
-    override fun startScan(): TotalFileScanResult {
+    @Throws(CancellationException::class)
+    override fun startScan(): FileScanResultSummary {
         throwIfMainThread()
         Log.i(TAG, "startScan: prepare")
         val l = SystemClock.elapsedRealtime()
         initIOExecutorsIfNeed()
-        val totalFileScanResult = TotalFileScanResult()
+        val fileScanResultSummary = FileScanResultSummary()
         ioExecutors.execute {
-            processDir(Environment.getExternalStorageDirectory(), totalFileScanResult)
+            processDir(Environment.getExternalStorageDirectory(), fileScanResultSummary)
         }
-        totalFileScanResult.countDownLatch.await()
+        fileScanResultSummary.countDownLatch.await()
+        if (ioExecutors.isShutdown) {
+            throw CancellationException("scan task has been stopped")
+        }
         Log.i(TAG, "startScan: done, cost ${SystemClock.elapsedRealtime() - l}ms")
         val statFs = StatFs(Environment.getExternalStorageDirectory().absolutePath)
-        totalFileScanResult.storageTotalSize = statFs.blockCountLong * statFs.blockSizeLong
-        totalFileScanResult.calcSize()
-        return totalFileScanResult
+        fileScanResultSummary.storageTotalSize = statFs.blockCountLong * statFs.blockSizeLong
+        fileScanResultSummary.calcSize()
+        return fileScanResultSummary
     }
 
     override fun stopScanIfNeed() {
-        if (this::ioExecutors.isInitialized) {
+        if (this::ioExecutors.isInitialized && ioExecutors.activeCount > 0) {
+            Log.i(TAG, "stopScanIfNeed: stop now")
             ioExecutors.shutdownNow()
-//            ioExecutors.shutdown()
         }
     }
 
-    private fun processDir(dir: File, totalFileScanResult: TotalFileScanResult) {
-        Log.d(TAG, "processDir() called with: dir = $dir")
-        totalFileScanResult.scanTaskNum.incrementAndGet()
+    private fun processDir(dir: File, fileScanResultSummary: FileScanResultSummary) {
+        fileScanResultSummary.scanTaskNum.incrementAndGet()
         try {
             val listFiles = dir.listFiles()
             if (listFiles.isNullOrEmpty()) {
-                totalFileScanResult.emptyDirScanResult.fileQueue.offer(dir)
+                fileScanResultSummary.emptyDirScanResult.fileQueue.offer(dir)
             } else {
                 val listPair = listFiles.partition { it.isDirectory }
                 for (lDir in listPair.first) {
                     try {
-                        ioExecutors.execute { processDir(lDir, totalFileScanResult) }
+                        ioExecutors.execute { processDir(lDir, fileScanResultSummary) }
                     } catch (e: Exception) {
-                        Log.e(TAG, "processDir: ", e)
+                        // the executors has been terminated
+                        // means our task should be interrupt
+                        return
                     }
                 }
                 for (lFile in listPair.second) {
                     val fileExt = lFile.extension
                     if (fileExt.isEmpty()) {
-                        totalFileScanResult.noExtScanResult.offerFileAndAddFileSize(lFile)
+                        fileScanResultSummary.noExtScanResult.offerFileAndAddFileSize(lFile)
                     } else if (FileScanServiceConfig.imageFileExtSet.contains(lFile.extension)) {
-                        totalFileScanResult.imageScanResult.offerFileAndAddFileSize(lFile)
+                        fileScanResultSummary.imageScanResult.offerFileAndAddFileSize(lFile)
                     } else if (FileScanServiceConfig.videoFileExtSet.contains(lFile.extension)) {
-                        totalFileScanResult.videoScanResult.offerFileAndAddFileSize(lFile)
+                        fileScanResultSummary.videoScanResult.offerFileAndAddFileSize(lFile)
                     } else if (FileScanServiceConfig.audioFileExtSet.contains(lFile.extension)) {
-                        totalFileScanResult.audioScanResult.offerFileAndAddFileSize(lFile)
+                        fileScanResultSummary.audioScanResult.offerFileAndAddFileSize(lFile)
                     } else if (FileScanServiceConfig.documentFileExtSet.contains(lFile.extension)) {
-                        totalFileScanResult.documentScanResult.offerFileAndAddFileSize(lFile)
+                        fileScanResultSummary.documentScanResult.offerFileAndAddFileSize(lFile)
                     } else if (FileScanServiceConfig.apkFileExt == lFile.extension) {
-                        totalFileScanResult.apkFileScanResult.offerFileAndAddFileSize(lFile)
+                        fileScanResultSummary.apkFileScanResult.offerFileAndAddFileSize(lFile)
                     } else if (FileScanServiceConfig.compressedFileExt.contains(lFile.extension)) {
-                        totalFileScanResult.compressedFileScanResult.offerFileAndAddFileSize(lFile)
+                        fileScanResultSummary.compressedFileScanResult.offerFileAndAddFileSize(lFile)
                     } else {
-                        totalFileScanResult.unknownExtScanResult.offerFileAndAddFileSize(lFile)
+                        fileScanResultSummary.unknownExtScanResult.offerFileAndAddFileSize(lFile)
                     }
                 }
             }
         } finally {
-            if (totalFileScanResult.scanTaskNum.decrementAndGet() <= 0) {
-                totalFileScanResult.countDownLatch.countDown()
+            if (fileScanResultSummary.scanTaskNum.decrementAndGet() <= 0) {
+                fileScanResultSummary.countDownLatch.countDown()
             }
         }
     }
 
-    private fun TotalFileScanResult.calcSize() {
+    private fun FileScanResultSummary.calcSize() {
         if (Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()) {
             val externalSf = StatFs(Environment.getExternalStorageDirectory().path)
             this.storageAvailableSize = externalSf.availableBytes

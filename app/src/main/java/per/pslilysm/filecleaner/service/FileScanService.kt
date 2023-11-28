@@ -14,7 +14,7 @@ interface FileScanService {
      *
      * @return the scan result
      */
-    fun startScan(): TotalFileScanResult
+    fun startScan(): FileScanResultSummary
 
     /**
      * Stop scan if need
