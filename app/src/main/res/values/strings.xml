@@ -14,5 +14,6 @@
     <string name="common_no_ext_file">No Suffix File</string>
     <string name="common_unknown_ext_file">Unknown Suffix File</string>
     <string name="common_other">Other</string>
+    <string name="image_content_desc_arrow_right">arrow right</string>
 
 </resources>

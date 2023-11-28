@@ -71,9 +71,9 @@
     <per.pslilysm.filecleaner.ui.widget.StorageAnalysisBar
         android:id="@+id/sab_main"
         android:layout_width="match_parent"
-        android:layout_height="32dp"
+        android:layout_height="24dp"
         android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="6dp"
         app:layout_constraintTop_toBottomOf="@id/tv_main_storage_used_size_value" />
 
     <LinearLayout
@@ -104,7 +104,7 @@
                     android:layout_height="8dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="6dp"
-                    app:cardBackgroundColor="@color/colorfff08273"
+                    app:cardBackgroundColor="@color/fff08273"
                     app:cardCornerRadius="4dp"
                     app:cardElevation="0dp" />
 
@@ -132,6 +132,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/image_content_desc_arrow_right"
                     android:src="@drawable/round_keyboard_arrow_right_24" />
 
             </LinearLayout>
@@ -159,7 +160,7 @@
                     android:layout_height="8dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="6dp"
-                    app:cardBackgroundColor="@color/colorffc897f0"
+                    app:cardBackgroundColor="@color/ffc897f0"
                     app:cardCornerRadius="4dp"
                     app:cardElevation="0dp" />
 
@@ -187,6 +188,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/image_content_desc_arrow_right"
                     android:src="@drawable/round_keyboard_arrow_right_24" />
 
             </LinearLayout>
@@ -214,7 +216,7 @@
                     android:layout_height="8dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="6dp"
-                    app:cardBackgroundColor="@color/colorff8cb2fc"
+                    app:cardBackgroundColor="@color/ff8cb2fc"
                     app:cardCornerRadius="4dp"
                     app:cardElevation="0dp" />
 
@@ -242,6 +244,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/image_content_desc_arrow_right"
                     android:src="@drawable/round_keyboard_arrow_right_24" />
 
             </LinearLayout>
@@ -269,7 +272,7 @@
                     android:layout_height="8dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="6dp"
-                    app:cardBackgroundColor="@color/colorffceaf81"
+                    app:cardBackgroundColor="@color/ffceaf81"
                     app:cardCornerRadius="4dp"
                     app:cardElevation="0dp" />
 
@@ -297,6 +300,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/image_content_desc_arrow_right"
                     android:src="@drawable/round_keyboard_arrow_right_24" />
 
             </LinearLayout>
@@ -324,7 +328,7 @@
                     android:layout_height="8dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="6dp"
-                    app:cardBackgroundColor="@color/colorffa5d934"
+                    app:cardBackgroundColor="@color/ffa5d934"
                     app:cardCornerRadius="4dp"
                     app:cardElevation="0dp" />
 
@@ -352,6 +356,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/image_content_desc_arrow_right"
                     android:src="@drawable/round_keyboard_arrow_right_24" />
 
             </LinearLayout>
@@ -379,7 +384,7 @@
                     android:layout_height="8dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="6dp"
-                    app:cardBackgroundColor="@color/colorff94a6be"
+                    app:cardBackgroundColor="@color/ff94a6be"
                     app:cardCornerRadius="4dp"
                     app:cardElevation="0dp" />
 
@@ -407,6 +412,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/image_content_desc_arrow_right"
                     android:src="@drawable/round_keyboard_arrow_right_24" />
 
             </LinearLayout>
@@ -434,7 +440,7 @@
                     android:layout_height="8dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="6dp"
-                    app:cardBackgroundColor="@color/colorff55afb7"
+                    app:cardBackgroundColor="@color/ff55afb7"
                     app:cardCornerRadius="4dp"
                     app:cardElevation="0dp" />
 
@@ -462,6 +468,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/image_content_desc_arrow_right"
                     android:src="@drawable/round_keyboard_arrow_right_24" />
 
             </LinearLayout>
@@ -489,7 +496,7 @@
                     android:layout_height="8dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="6dp"
-                    app:cardBackgroundColor="@color/colorff4673ab"
+                    app:cardBackgroundColor="@color/ff4673ab"
                     app:cardCornerRadius="4dp"
                     app:cardElevation="0dp" />
 
@@ -517,6 +524,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/image_content_desc_arrow_right"
                     android:src="@drawable/round_keyboard_arrow_right_24" />
 
             </LinearLayout>
@@ -544,7 +552,7 @@
                     android:layout_height="8dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="6dp"
-                    app:cardBackgroundColor="@color/colorff8ea9bc"
+                    app:cardBackgroundColor="@color/ff8ea9bc"
                     app:cardCornerRadius="4dp"
                     app:cardElevation="0dp" />
 
@@ -572,6 +580,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/image_content_desc_arrow_right"
                     android:src="@drawable/round_keyboard_arrow_right_24" />
 
             </LinearLayout>
@@ -599,7 +608,7 @@
                     android:layout_height="8dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="6dp"
-                    app:cardBackgroundColor="@color/colorff868895"
+                    app:cardBackgroundColor="@color/ff868895"
                     app:cardCornerRadius="4dp"
                     app:cardElevation="0dp" />
 
@@ -627,6 +636,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/image_content_desc_arrow_right"
                     android:src="@drawable/round_keyboard_arrow_right_24" />
 
             </LinearLayout>

@@ -13,6 +13,7 @@ import com.hjq.permissions.XXPermissions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import per.pslilysm.filecleaner.R
 import per.pslilysm.filecleaner.dagger.FCAppComponent
 import per.pslilysm.filecleaner.databinding.ActivityMainBinding
 import per.pslilysm.filecleaner.service.FileScanResultSummary
@@ -82,9 +83,25 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     @SuppressLint("SetTextI18n")
     private fun refreshUIWithScanResult(scanResult: FileScanResultSummary) {
-        binding.tvMainUsedPercentValue.text = "${scanResult.storageUsedSize * 100 / scanResult.storageTotalSize}%"
+        val sts = scanResult.storageTotalSize
+        binding.tvMainUsedPercentValue.text = "${scanResult.storageUsedSize * 100 / sts}%"
         binding.tvMainStorageUsedSizeValue.text = scanResult.storageUsedSize.autoFormatFileSize()
-        binding.tvMainStorageTotalSizeValue.text = scanResult.storageTotalSize.autoFormatFileSize()
+        binding.tvMainStorageTotalSizeValue.text = sts.autoFormatFileSize()
+
+        binding.sabMain.dataAndColorArray = arrayOf(
+            (scanResult.imageScanResult.queueFileSize.get() * 1000 / sts / 1000f) to getColor(R.color.fff08273),
+            (scanResult.videoScanResult.queueFileSize.get() * 1000 / sts / 1000f) to getColor(R.color.ffc897f0),
+            (scanResult.audioScanResult.queueFileSize.get() * 1000 / sts / 1000f) to getColor(R.color.ff8cb2fc),
+            (scanResult.documentScanResult.queueFileSize.get() * 1000 / sts / 1000f) to getColor(R.color.ffceaf81),
+            (scanResult.apkFileScanResult.queueFileSize.get() * 1000 / sts / 1000f) to getColor(R.color.ffa5d934),
+            (scanResult.compressedFileScanResult.queueFileSize.get() * 1000 / sts / 1000f) to getColor(R.color.ff94a6be),
+            (scanResult.emptyDirScanResult.queueFileSize.get() * 1000 / sts / 1000f) to getColor(R.color.ff55afb7),
+            (scanResult.noExtScanResult.queueFileSize.get() * 1000 / sts / 1000f) to getColor(R.color.ff4673ab),
+            (scanResult.unknownExtScanResult.queueFileSize.get() * 1000 / sts / 1000f) to getColor(R.color.ff8ea9bc),
+            (scanResult.otherFileSize * 1000 / sts / 1000f) to getColor(R.color.ff868895),
+        )
+        binding.sabMain.invalidate()
+
         binding.tvMainImageSize.text = scanResult.imageScanResult.queueFileSize.get().autoFormatFileSize()
         binding.tvMainVideoSize.text = scanResult.videoScanResult.queueFileSize.get().autoFormatFileSize()
         binding.tvMainAudioSize.text = scanResult.audioScanResult.queueFileSize.get().autoFormatFileSize()
