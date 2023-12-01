@@ -9,6 +9,7 @@ import com.hjq.permissions.XXPermissions
 import per.pslilysm.filecleaner.R
 import per.pslilysm.filecleaner.dagger.FCAppComponent
 import per.pslilysm.filecleaner.databinding.ActivityStorageAnalysisBinding
+import per.pslilysm.filecleaner.entity.AppScanResultSummary
 import per.pslilysm.filecleaner.entity.FileScanResultSummary
 import per.pslilysm.filecleaner.entity.StorageScanResultSummary
 import per.pslilysm.filecleaner.entity.StorageStat
@@ -61,8 +62,8 @@ class StorageAnalysisActivity : AppCompatActivity(), View.OnClickListener, Stora
             }
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         storageAnalysisVM.stopScanStorageIfNeed()
     }
 
@@ -75,6 +76,10 @@ class StorageAnalysisActivity : AppCompatActivity(), View.OnClickListener, Stora
         val appScanResultSummary = storageScanResultSummary.appScanResultSummary
         val fileScanResultSummary = storageScanResultSummary.fileScanResultSummary
         val otherFileSize = storageScanResultSummary.otherStorageSize
+        if (appScanResultSummary != null && fileScanResultSummary != null && otherFileSize != null) {
+            val storageTotalSize = storageScanResultSummary.storageStat.storageTotalSize
+            refreshStorageAnalysisUI(storageTotalSize, appScanResultSummary, fileScanResultSummary, otherFileSize)
+        }
         if (appScanResultSummary != null) {
             binding.tvMainAppSize.text = appScanResultSummary.queueAppsSize.get().autoFormatFileSize()
         }
@@ -83,23 +88,6 @@ class StorageAnalysisActivity : AppCompatActivity(), View.OnClickListener, Stora
         }
         if (otherFileSize != null) {
             binding.tvMainOtherSize.text = otherFileSize.autoFormatFileSize()
-        }
-        if (appScanResultSummary != null && fileScanResultSummary != null && otherFileSize != null) {
-            val storageTotalSize = storageScanResultSummary.storageStat.storageTotalSize
-            binding.sabMain.dataAndColorArray = arrayOf(
-                (appScanResultSummary.queueAppsSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ff00bcd4),
-                (fileScanResultSummary.imageScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.fff08273),
-                (fileScanResultSummary.videoScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ffc897f0),
-                (fileScanResultSummary.audioScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ff8cb2fc),
-                (fileScanResultSummary.documentScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ffceaf81),
-                (fileScanResultSummary.apkFileScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ffa5d934),
-                (fileScanResultSummary.compressedFileScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ff94a6be),
-                (fileScanResultSummary.emptyDirScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ff55afb7),
-                (fileScanResultSummary.noExtScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ff4673ab),
-                (fileScanResultSummary.unknownExtScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ff8ea9bc),
-                (otherFileSize * 1000 / storageTotalSize / 1000f) to getColor(R.color.ff868895),
-            )
-            binding.sabMain.invalidate()
         }
     }
 
@@ -111,7 +99,28 @@ class StorageAnalysisActivity : AppCompatActivity(), View.OnClickListener, Stora
         binding.tvMainStorageTotalSizeValue.text = sts.autoFormatFileSize()
     }
 
-    @SuppressLint("SetTextI18n")
+    private fun refreshStorageAnalysisUI(
+        storageTotalSize: Long,
+        appScanResultSummary: AppScanResultSummary,
+        fileScanResultSummary: FileScanResultSummary,
+        otherFileSize: Long
+    ) {
+        binding.sabMain.dataAndColorArray = arrayOf(
+            (appScanResultSummary.queueAppsSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ff00bcd4),
+            (fileScanResultSummary.imageScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.fff08273),
+            (fileScanResultSummary.videoScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ffc897f0),
+            (fileScanResultSummary.audioScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ff8cb2fc),
+            (fileScanResultSummary.documentScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ffceaf81),
+            (fileScanResultSummary.apkFileScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ffa5d934),
+            (fileScanResultSummary.compressedFileScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ff94a6be),
+            (fileScanResultSummary.emptyDirScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ff55afb7),
+            (fileScanResultSummary.noExtScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ff4673ab),
+            (fileScanResultSummary.unknownExtScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ff8ea9bc),
+            (otherFileSize * 1000 / storageTotalSize / 1000f) to getColor(R.color.ff868895),
+        )
+        binding.sabMain.invalidate()
+    }
+
     private fun refreshFileScanResultUI(scanResult: FileScanResultSummary) {
         binding.tvMainScanCost.text = getString(R.string.scan_cost, scanResult.scanCost)
         binding.tvMainImageSize.text = scanResult.imageScanResult.queueFileSize.get().autoFormatFileSize()

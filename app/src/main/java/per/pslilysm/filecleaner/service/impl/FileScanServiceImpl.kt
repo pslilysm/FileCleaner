@@ -49,8 +49,10 @@ class FileScanServiceImpl : FileScanService {
                     throw RejectedExecutionException("Task $r rejected from $executor")
                 }
             }
-            ioExecutors = ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAliveTimeSeconds.toLong(), TimeUnit.SECONDS,
-                workQueue, threadFactory, rejectedExecutionHandler)
+            ioExecutors = ThreadPoolExecutor(
+                corePoolSize, maxPoolSize, keepAliveTimeSeconds.toLong(), TimeUnit.SECONDS,
+                workQueue, threadFactory, rejectedExecutionHandler
+            )
             workQueue.setExecutor(ioExecutors)
         }
     }
