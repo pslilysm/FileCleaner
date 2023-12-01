@@ -2,7 +2,9 @@ package per.pslilysm.filecleaner.dagger
 
 import dagger.Module
 import dagger.Provides
+import per.pslilysm.filecleaner.service.AppScanService
 import per.pslilysm.filecleaner.service.FileScanService
+import per.pslilysm.filecleaner.service.impl.AppScanServiceImpl
 import per.pslilysm.filecleaner.service.impl.FileScanServiceImpl
 import javax.inject.Singleton
 
@@ -20,6 +22,12 @@ class ServiceModule {
     @Singleton
     fun fileScanService(): FileScanService {
         return FileScanServiceImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun appScanService(): AppScanService {
+        return AppScanServiceImpl()
     }
 
 }

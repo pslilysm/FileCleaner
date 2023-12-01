@@ -1,7 +1,7 @@
 package per.pslilysm.filecleaner.dagger
 
 import dagger.Component
-import per.pslilysm.filecleaner.ui.activity.MainActivity
+import per.pslilysm.filecleaner.ui.activity.StorageAnalysisActivity
 import javax.inject.Singleton
 
 /**
@@ -15,7 +15,7 @@ import javax.inject.Singleton
 @Component(modules = [ServiceModule::class])
 interface FCAppComponent {
 
-    fun injectMainActivity(mainActivity: MainActivity)
+    fun injectMainActivity(storageAnalysisActivity: StorageAnalysisActivity)
 
     companion object {
 

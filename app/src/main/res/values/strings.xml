@@ -8,7 +8,8 @@
     <string name="common_video">Video</string>
     <string name="common_audio">Audio</string>
     <string name="common_document">Document</string>
-    <string name="common_apk_file">Apk File</string>
+    <string name="common_apk_file">Installation File</string>
+    <string name="common_app">App</string>
     <string name="common_compressed_file">Compressed File</string>
     <string name="common_empty_dir">Empty Folder</string>
     <string name="common_no_ext_file">No Suffix File</string>

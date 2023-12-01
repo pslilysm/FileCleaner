@@ -1,16 +1,16 @@
 package per.pslilysm.filecleaner.service
 
-import per.pslilysm.filecleaner.entity.FileScanResultSummary
+import per.pslilysm.filecleaner.entity.AppScanResultSummary
 import java.util.concurrent.CancellationException
 
 /**
- * 文件扫描服务
+ * 应用扫描服务
  *
  * @author caoxuedong
- * Created on 2023/10/24 14:33
+ * Created on 2023/11/30 16:46
  * @since 1.0
  */
-interface FileScanService {
+interface AppScanService {
 
     /**
      * Start scan
@@ -18,7 +18,7 @@ interface FileScanService {
      * @return the scan result
      */
     @Throws(CancellationException::class)
-    fun start(): FileScanResultSummary
+    fun start(): AppScanResultSummary
 
     /**
      * Stop scan if need

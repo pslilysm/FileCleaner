@@ -1,4 +1,4 @@
-package per.pslilysm.filecleaner.service
+package per.pslilysm.filecleaner.entity
 
 import java.io.File
 import java.nio.file.Files

@@ -1,10 +1,9 @@
 package per.pslilysm.filecleaner.service.impl
 
 import android.os.Environment
-import android.os.StatFs
 import android.os.SystemClock
 import android.util.Log
-import per.pslilysm.filecleaner.service.FileScanResultSummary
+import per.pslilysm.filecleaner.entity.FileScanResultSummary
 import per.pslilysm.filecleaner.service.FileScanService
 import per.pslilysm.filecleaner.service.FileScanServiceConfig
 import pers.pslilysm.sdk_library.extention.throwIfMainThread
@@ -38,8 +37,8 @@ class FileScanServiceImpl : FileScanService {
     private fun initIOExecutorsIfNeed() {
         if (!this::ioExecutors.isInitialized || ioExecutors.isShutdown) {
             val corePoolSize = 0
-            val maxPoolSize = Runtime.getRuntime().availableProcessors() * 10
-            val keepAliveTimeSeconds = 2
+            val maxPoolSize = Runtime.getRuntime().availableProcessors() * 8
+            val keepAliveTimeSeconds = 30
             val maxQueueSize = maxPoolSize * 0xFF
             val workQueue = ExecutorsLinkedBlockingQueue(maxQueueSize)
             val threadFactory = ThreadFactory { r: Runnable? -> Thread(r, "fss-io-${ioThreadNum.incrementAndGet()}-thread") }
@@ -57,7 +56,7 @@ class FileScanServiceImpl : FileScanService {
     }
 
     @Throws(CancellationException::class)
-    override fun startScan(): FileScanResultSummary {
+    override fun start(): FileScanResultSummary {
         throwIfMainThread()
         Log.i(TAG, "startScan: prepare")
         val l = SystemClock.elapsedRealtime()
@@ -70,17 +69,14 @@ class FileScanServiceImpl : FileScanService {
         if (ioExecutors.isShutdown) {
             throw CancellationException("scan task has been stopped")
         }
-        val statFs = StatFs(Environment.getExternalStorageDirectory().absolutePath)
-        fileScanResultSummary.storageTotalSize = statFs.blockCountLong * statFs.blockSizeLong
-        fileScanResultSummary.calcSize()
         val scanCost = SystemClock.elapsedRealtime() - l
         fileScanResultSummary.scanCost = scanCost.toInt()
         return fileScanResultSummary
     }
 
-    override fun stopScanIfNeed() {
+    override fun stopIfNeed() {
         if (this::ioExecutors.isInitialized && ioExecutors.activeCount > 0) {
-            Log.i(TAG, "stopScanIfNeed: stop now")
+            Log.i(TAG, "stopIfNeed: stop now")
             ioExecutors.shutdownNow()
         }
     }
@@ -127,24 +123,6 @@ class FileScanServiceImpl : FileScanService {
             if (fileScanResultSummary.scanTaskNum.decrementAndGet() <= 0) {
                 fileScanResultSummary.countDownLatch.countDown()
             }
-        }
-    }
-
-    private fun FileScanResultSummary.calcSize() {
-        if (Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()) {
-            val externalSf = StatFs(Environment.getExternalStorageDirectory().path)
-            this.storageAvailableSize = externalSf.availableBytes
-            this.storageTotalSize = externalSf.totalBytes
-            this.storageUsedSize = this.storageTotalSize - this.storageAvailableSize
-            this.otherFileSize = this.storageUsedSize -
-                    (this.imageScanResult.queueFileSize.get() +
-                            this.videoScanResult.queueFileSize.get() +
-                            this.audioScanResult.queueFileSize.get() +
-                            this.documentScanResult.queueFileSize.get() +
-                            this.apkFileScanResult.queueFileSize.get() +
-                            this.compressedFileScanResult.queueFileSize.get() +
-                            this.noExtScanResult.queueFileSize.get() +
-                            this.unknownExtScanResult.queueFileSize.get())
         }
     }
 

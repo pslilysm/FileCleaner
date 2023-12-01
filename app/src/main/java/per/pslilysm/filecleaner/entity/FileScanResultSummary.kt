@@ -1,4 +1,4 @@
-package per.pslilysm.filecleaner.service
+package per.pslilysm.filecleaner.entity
 
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicInteger
@@ -21,11 +21,6 @@ data class FileScanResultSummary(
     val noExtScanResult: FileScanResult = FileScanResult(),
     val unknownExtScanResult: FileScanResult = FileScanResult(),
 //    val largeFileQueue: Queue<File> = ConcurrentLinkedQueue(),
-    var otherFileSize: Long = 0L,
-
-    var storageUsedSize: Long = 0L,
-    var storageAvailableSize: Long = 0L,
-    var storageTotalSize: Long = 0L,
     var scanCost: Int = 0,
 
     val scanTaskNum: AtomicInteger = AtomicInteger(),
