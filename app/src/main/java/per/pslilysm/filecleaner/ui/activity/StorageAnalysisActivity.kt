@@ -1,21 +1,13 @@
 package per.pslilysm.filecleaner.ui.activity
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import per.pslilysm.filecleaner.R
 import per.pslilysm.filecleaner.dagger.FCAppComponent
 import per.pslilysm.filecleaner.databinding.ActivityStorageAnalysisBinding
-import per.pslilysm.filecleaner.entity.AppScanResultSummary
-import per.pslilysm.filecleaner.entity.FileScanResultSummary
-import per.pslilysm.filecleaner.entity.StorageScanResultSummary
-import per.pslilysm.filecleaner.entity.StorageStat
-import per.pslilysm.filecleaner.ui.i.StorageAnalysisUI
 import per.pslilysm.filecleaner.viewmodel.StorageAnalysisVM
-import pers.pslilysm.sdk_library.extention.autoFormatFileSize
 import javax.inject.Inject
 
 
@@ -26,7 +18,7 @@ import javax.inject.Inject
  * Created on 2023/10/23 16:03
  * @since 1.0
  */
-class StorageAnalysisActivity : AppCompatActivity(), View.OnClickListener, StorageAnalysisUI {
+class StorageAnalysisActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivityStorageAnalysisBinding
 
@@ -36,19 +28,35 @@ class StorageAnalysisActivity : AppCompatActivity(), View.OnClickListener, Stora
     override fun onCreate(savedInstanceState: Bundle?) {
         FCAppComponent.instance.injectMainActivity(this)
         super.onCreate(savedInstanceState)
-        binding = ActivityStorageAnalysisBinding.inflate(layoutInflater).also { setContentView(it.root) }
-        binding.llMainAppSizeContainer.setOnClickListener(this)
-        binding.llMainImageSizeContainer.setOnClickListener(this)
-        binding.llMainVideoSizeContainer.setOnClickListener(this)
-        binding.llMainAudioSizeContainer.setOnClickListener(this)
-        binding.llMainDocumentSizeContainer.setOnClickListener(this)
-        binding.llMainApkFileSizeContainer.setOnClickListener(this)
-        binding.llMainCompressedFileSizeContainer.setOnClickListener(this)
-        binding.llMainEmptyDirSizeContainer.setOnClickListener(this)
-        binding.llMainNoExtFileSizeContainer.setOnClickListener(this)
-        binding.llMainUnknownExtFileSizeContainer.setOnClickListener(this)
-        binding.llMainOtherSizeContainer.setOnClickListener(this)
-        storageAnalysisVM.observeScanResult(this)
+        binding = ActivityStorageAnalysisBinding.inflate(layoutInflater).apply {
+            vm = storageAnalysisVM
+            lifecycleOwner = this@StorageAnalysisActivity
+            layoutItemScanResult.apply {
+                vm = storageAnalysisVM
+                lifecycleOwner = this@StorageAnalysisActivity
+            }
+        }.also {
+            setContentView(it.root)
+        }
+        binding.layoutItemScanResult.llMainAppSizeContainer.setOnClickListener(this)
+        binding.layoutItemScanResult.llMainImageSizeContainer.setOnClickListener(this)
+        binding.layoutItemScanResult.llMainVideoSizeContainer.setOnClickListener(this)
+        binding.layoutItemScanResult.llMainAudioSizeContainer.setOnClickListener(this)
+        binding.layoutItemScanResult.llMainDocumentSizeContainer.setOnClickListener(this)
+        binding.layoutItemScanResult.llMainApkFileSizeContainer.setOnClickListener(this)
+        binding.layoutItemScanResult.llMainCompressedFileSizeContainer.setOnClickListener(this)
+        binding.layoutItemScanResult.llMainEmptyDirSizeContainer.setOnClickListener(this)
+        binding.layoutItemScanResult.llMainNoExtFileSizeContainer.setOnClickListener(this)
+        binding.layoutItemScanResult.llMainUnknownExtFileSizeContainer.setOnClickListener(this)
+        binding.layoutItemScanResult.llMainOtherSizeContainer.setOnClickListener(this)
+
+        binding.layoutUnusedApps.clUnusedAppsTitleContainer.setOnClickListener(this)
+        binding.layoutUnusedApps.clUnusedApps1.setOnClickListener(this)
+        binding.layoutUnusedApps.clUnusedApps2.setOnClickListener(this)
+        binding.layoutUnusedApps.clUnusedApps3.setOnClickListener(this)
+        binding.layoutUnusedApps.clUnusedApps4.setOnClickListener(this)
+
+        binding.layoutLargeFiles.clLargeFilesTitleContainer.setOnClickListener(this)
     }
 
     override fun onStart() {
@@ -69,69 +77,6 @@ class StorageAnalysisActivity : AppCompatActivity(), View.OnClickListener, Stora
 
     override fun onClick(v: View?) {
 
-    }
-
-    override fun refreshStorageAnalysisUI(storageScanResultSummary: StorageScanResultSummary) {
-        refreshStorageStatUI(storageScanResultSummary.storageStat)
-        val appScanResultSummary = storageScanResultSummary.appScanResultSummary
-        val fileScanResultSummary = storageScanResultSummary.fileScanResultSummary
-        val otherFileSize = storageScanResultSummary.otherStorageSize
-        if (appScanResultSummary != null && fileScanResultSummary != null && otherFileSize != null) {
-            val storageTotalSize = storageScanResultSummary.storageStat.storageTotalSize
-            refreshStorageAnalysisUI(storageTotalSize, appScanResultSummary, fileScanResultSummary, otherFileSize)
-        }
-        if (appScanResultSummary != null) {
-            binding.tvMainAppSize.text = appScanResultSummary.queueAppsSize.get().autoFormatFileSize()
-        }
-        if (fileScanResultSummary != null) {
-            refreshFileScanResultUI(fileScanResultSummary)
-        }
-        if (otherFileSize != null) {
-            binding.tvMainOtherSize.text = otherFileSize.autoFormatFileSize()
-        }
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun refreshStorageStatUI(storageStat: StorageStat) {
-        val sts = storageStat.storageTotalSize
-        binding.tvMainUsedPercentValue.text = "${storageStat.storageUsedSize * 100 / sts}%"
-        binding.tvMainStorageUsedSizeValue.text = storageStat.storageUsedSize.autoFormatFileSize()
-        binding.tvMainStorageTotalSizeValue.text = sts.autoFormatFileSize()
-    }
-
-    private fun refreshStorageAnalysisUI(
-        storageTotalSize: Long,
-        appScanResultSummary: AppScanResultSummary,
-        fileScanResultSummary: FileScanResultSummary,
-        otherFileSize: Long
-    ) {
-        binding.sabMain.dataAndColorArray = arrayOf(
-            (appScanResultSummary.queueAppsSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ff00bcd4),
-            (fileScanResultSummary.imageScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.fff08273),
-            (fileScanResultSummary.videoScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ffc897f0),
-            (fileScanResultSummary.audioScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ff8cb2fc),
-            (fileScanResultSummary.documentScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ffceaf81),
-            (fileScanResultSummary.apkFileScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ffa5d934),
-            (fileScanResultSummary.compressedFileScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ff94a6be),
-            (fileScanResultSummary.emptyDirScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ff55afb7),
-            (fileScanResultSummary.noExtScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ff4673ab),
-            (fileScanResultSummary.unknownExtScanResult.queueFileSize.get() * 1000 / storageTotalSize / 1000f) to getColor(R.color.ff8ea9bc),
-            (otherFileSize * 1000 / storageTotalSize / 1000f) to getColor(R.color.ff868895),
-        )
-        binding.sabMain.invalidate()
-    }
-
-    private fun refreshFileScanResultUI(scanResult: FileScanResultSummary) {
-        binding.tvMainScanCost.text = getString(R.string.scan_cost, scanResult.scanCost)
-        binding.tvMainImageSize.text = scanResult.imageScanResult.queueFileSize.get().autoFormatFileSize()
-        binding.tvMainVideoSize.text = scanResult.videoScanResult.queueFileSize.get().autoFormatFileSize()
-        binding.tvMainAudioSize.text = scanResult.audioScanResult.queueFileSize.get().autoFormatFileSize()
-        binding.tvMainDocumentSize.text = scanResult.documentScanResult.queueFileSize.get().autoFormatFileSize()
-        binding.tvMainApkFileSize.text = scanResult.apkFileScanResult.queueFileSize.get().autoFormatFileSize()
-        binding.tvMainCompressedFileSize.text = scanResult.compressedFileScanResult.queueFileSize.get().autoFormatFileSize()
-        binding.tvMainEmptyDirSize.text = scanResult.emptyDirScanResult.fileQueue.size.toString()
-        binding.tvMainNoExtFileSize.text = scanResult.noExtScanResult.queueFileSize.get().autoFormatFileSize()
-        binding.tvMainUnknownExtFileSize.text = scanResult.unknownExtScanResult.queueFileSize.get().autoFormatFileSize()
     }
 
 }

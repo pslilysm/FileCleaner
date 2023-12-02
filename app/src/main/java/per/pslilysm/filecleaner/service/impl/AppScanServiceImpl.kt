@@ -5,8 +5,8 @@ import android.content.pm.ApplicationInfo
 import android.os.SystemClock
 import android.os.storage.StorageManager
 import android.util.Log
-import per.pslilysm.filecleaner.entity.AppScanResult
 import per.pslilysm.filecleaner.entity.AppScanResultSummary
+import per.pslilysm.filecleaner.entity.AppScanResult
 import per.pslilysm.filecleaner.extension.totalSize
 import per.pslilysm.filecleaner.service.AppScanService
 import pers.pslilysm.sdk_library.AppHolder
@@ -93,14 +93,17 @@ class AppScanServiceImpl : AppScanService {
                         pkgManager.getApplicationLabel(applicationInfo).toString(),
                         appStats.totalSize()
                     )
-                    appScanResultSummary.appScanResultQueue.offer(appScanResult)
-                    appScanResultSummary.queueAppsSize.getAndAdd(appScanResult.appStorageSize)
+                    appScanResultSummary.appQueue.offer(appScanResult)
+                    appScanResultSummary.queueSize.getAndAdd(appScanResult.appStorageSize)
                 } finally {
                     countDownLatch.countDown()
                 }
             }
         }
         countDownLatch.await()
+        if (ioExecutors.isShutdown) {
+            throw CancellationException("App scan task has been stopped")
+        }
         Log.i(TAG, "startScan: scan app cost ${SystemClock.elapsedRealtime() - l} ms")
         return appScanResultSummary
     }

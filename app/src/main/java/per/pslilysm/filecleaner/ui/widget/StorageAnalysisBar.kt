@@ -35,7 +35,7 @@ class StorageAnalysisBar(context: Context, attrs: AttributeSet?) : View(context,
         paint.isAntiAlias = true
         paint.style = Paint.Style.FILL
         setLayerType(LAYER_TYPE_HARDWARE, paint)
-        backgroundColor = context.getColor(R.color.ffe4e4e4)
+        backgroundColor = context.getColor(R.color.ff484848)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {

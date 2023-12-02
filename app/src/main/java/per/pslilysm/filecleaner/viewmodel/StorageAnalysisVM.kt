@@ -5,10 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import per.pslilysm.filecleaner.entity.StorageScanResultSummary
+import per.pslilysm.filecleaner.R
+import per.pslilysm.filecleaner.entity.StorageScanResult
 import per.pslilysm.filecleaner.model.StorageAnalysisModel
-import per.pslilysm.filecleaner.ui.i.StorageAnalysisUI
+import pers.pslilysm.sdk_library.AppHolder
 import java.util.concurrent.CancellationException
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import javax.inject.Inject
 
@@ -24,27 +26,29 @@ class StorageAnalysisVM @Inject constructor(
 ) : ViewModel() {
 
     private val scanExecutors = Executors.newFixedThreadPool(2)
+    
+    val scanResult = MutableLiveData<StorageScanResult>()
 
-    private val scanResultSummaryLiveData: MutableLiveData<StorageScanResultSummary> = MutableLiveData()
-
-    fun observeScanResult(storageAnalysisUI: StorageAnalysisUI) {
-        scanResultSummaryLiveData.observe(storageAnalysisUI) {
-            storageAnalysisUI.refreshStorageAnalysisUI(it)
-        }
-    }
+    val sabData = MutableLiveData<Array<Pair<Float, Int>>?>()
 
     fun startScanStorage() {
+        val storageScanResult = StorageScanResult()
+        scanResult.value = storageScanResult
+        sabData.value = null
         viewModelScope.launch(Dispatchers.IO) {
-            val storageScanResultSummary = StorageScanResultSummary(storageAnalysisModel.calcStorageStatFs())
+            val countDownLatch = CountDownLatch(2)
             scanExecutors.execute {
-                val fileScanResultSummary = try {
-                    storageAnalysisModel.scanFile()
-                } catch (e: CancellationException) {
-                    return@execute
+                try {
+                    val fileScanResultSummary = try {
+                        storageAnalysisModel.scanFile()
+                    } catch (e: CancellationException) {
+                        return@execute
+                    }
+                    storageScanResult.file = fileScanResultSummary
+                    scanResult.postValue(storageScanResult)
+                } finally {
+                    countDownLatch.countDown()
                 }
-                storageScanResultSummary.fileScanResultSummary = fileScanResultSummary
-                storageScanResultSummary.calcOtherStorageSizeIfCan()
-                scanResultSummaryLiveData.postValue(storageScanResultSummary)
             }
             scanExecutors.execute {
                 val appScanResultSummary = try {
@@ -52,9 +56,34 @@ class StorageAnalysisVM @Inject constructor(
                 } catch (e: CancellationException) {
                     return@execute
                 }
-                storageScanResultSummary.appScanResultSummary = appScanResultSummary
-                storageScanResultSummary.calcOtherStorageSizeIfCan()
-                scanResultSummaryLiveData.postValue(storageScanResultSummary)
+                storageScanResult.app = appScanResultSummary
+                scanResult.postValue(storageScanResult)
+                countDownLatch.countDown()
+            }
+            countDownLatch.await()
+            val appResult = storageScanResult.app
+            val fileResult = storageScanResult.file
+            if (appResult!= null && fileResult != null) {
+                val storageStat = storageAnalysisModel.calcStorageStatFs()
+                val storageTotalSize = storageStat.totalSize
+                storageScanResult.stat = storageStat
+                storageScanResult.calcOtherSizeIfCan()
+                scanResult.postValue(storageScanResult)
+                sabData.postValue(
+                    arrayOf(
+                        (appResult.queueSize.get() * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.ff00bcd4),
+                        (fileResult.image.queueSize.get() * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.fff08273),
+                        (fileResult.video.queueSize.get() * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.ffc897f0),
+                        (fileResult.audio.queueSize.get() * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.ff8cb2fc),
+                        (fileResult.document.queueSize.get() * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.ffceaf81),
+                        (fileResult.apkFile.queueSize.get() * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.ffa5d934),
+                        (fileResult.compressedFile.queueSize.get() * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.ff94a6be),
+                        (fileResult.emptyDir.queueSize.get() * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.ff55afb7),
+                        (fileResult.noExt.queueSize.get() * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.ff4673ab),
+                        (fileResult.unknownExt.queueSize.get() * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.ff8ea9bc),
+                        (storageScanResult.other!! * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.ff868895),
+                    )
+                )
             }
         }
     }

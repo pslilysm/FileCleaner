@@ -4,22 +4,22 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * 文件扫描结果总结
+ * 文件扫描结果总计
  *
  * @author caoxuedong
  * Created on 2023/10/24 16:36
  * @since 1.0
  */
 data class FileScanResultSummary(
-    val imageScanResult: FileScanResult = FileScanResult(),
-    val videoScanResult: FileScanResult = FileScanResult(),
-    val audioScanResult: FileScanResult = FileScanResult(),
-    val documentScanResult: FileScanResult = FileScanResult(),
-    val apkFileScanResult: FileScanResult = FileScanResult(),
-    val compressedFileScanResult: FileScanResult = FileScanResult(),
-    val emptyDirScanResult: FileScanResult = FileScanResult(),
-    val noExtScanResult: FileScanResult = FileScanResult(),
-    val unknownExtScanResult: FileScanResult = FileScanResult(),
+    val image: FileScanResult = FileScanResult(),
+    val video: FileScanResult = FileScanResult(),
+    val audio: FileScanResult = FileScanResult(),
+    val document: FileScanResult = FileScanResult(),
+    val apkFile: FileScanResult = FileScanResult(),
+    val compressedFile: FileScanResult = FileScanResult(),
+    val emptyDir: FileScanResult = FileScanResult(),
+    val noExt: FileScanResult = FileScanResult(),
+    val unknownExt: FileScanResult = FileScanResult(),
 //    val largeFileQueue: Queue<File> = ConcurrentLinkedQueue(),
     var scanCost: Int = 0,
 

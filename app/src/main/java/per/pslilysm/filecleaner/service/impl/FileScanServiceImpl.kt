@@ -69,7 +69,7 @@ class FileScanServiceImpl : FileScanService {
         }
         fileScanResultSummary.countDownLatch.await()
         if (ioExecutors.isShutdown) {
-            throw CancellationException("scan task has been stopped")
+            throw CancellationException("File scan task has been stopped")
         }
         val scanCost = SystemClock.elapsedRealtime() - l
         fileScanResultSummary.scanCost = scanCost.toInt()
@@ -88,7 +88,7 @@ class FileScanServiceImpl : FileScanService {
         try {
             val listFiles = dir.listFiles()
             if (listFiles.isNullOrEmpty()) {
-                fileScanResultSummary.emptyDirScanResult.fileQueue.offer(dir)
+                fileScanResultSummary.emptyDir.fileQueue.offer(dir)
             } else {
                 val listPair = listFiles.partition { it.isDirectory }
                 for (lDir in listPair.first) {
@@ -103,21 +103,21 @@ class FileScanServiceImpl : FileScanService {
                 for (lFile in listPair.second) {
                     val fileExt = lFile.extension
                     if (fileExt.isEmpty()) {
-                        fileScanResultSummary.noExtScanResult.offerFileAndAddFileSize(lFile)
+                        fileScanResultSummary.noExt.offerFileAndAddFileSize(lFile)
                     } else if (FileScanServiceConfig.imageFileExtSet.contains(lFile.extension)) {
-                        fileScanResultSummary.imageScanResult.offerFileAndAddFileSize(lFile)
+                        fileScanResultSummary.image.offerFileAndAddFileSize(lFile)
                     } else if (FileScanServiceConfig.videoFileExtSet.contains(lFile.extension)) {
-                        fileScanResultSummary.videoScanResult.offerFileAndAddFileSize(lFile)
+                        fileScanResultSummary.video.offerFileAndAddFileSize(lFile)
                     } else if (FileScanServiceConfig.audioFileExtSet.contains(lFile.extension)) {
-                        fileScanResultSummary.audioScanResult.offerFileAndAddFileSize(lFile)
+                        fileScanResultSummary.audio.offerFileAndAddFileSize(lFile)
                     } else if (FileScanServiceConfig.documentFileExtSet.contains(lFile.extension)) {
-                        fileScanResultSummary.documentScanResult.offerFileAndAddFileSize(lFile)
+                        fileScanResultSummary.document.offerFileAndAddFileSize(lFile)
                     } else if (FileScanServiceConfig.apkFileExt == lFile.extension) {
-                        fileScanResultSummary.apkFileScanResult.offerFileAndAddFileSize(lFile)
+                        fileScanResultSummary.apkFile.offerFileAndAddFileSize(lFile)
                     } else if (FileScanServiceConfig.compressedFileExt.contains(lFile.extension)) {
-                        fileScanResultSummary.compressedFileScanResult.offerFileAndAddFileSize(lFile)
+                        fileScanResultSummary.compressedFile.offerFileAndAddFileSize(lFile)
                     } else {
-                        fileScanResultSummary.unknownExtScanResult.offerFileAndAddFileSize(lFile)
+                        fileScanResultSummary.unknownExt.offerFileAndAddFileSize(lFile)
                     }
                 }
             }

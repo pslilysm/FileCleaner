@@ -8,7 +8,7 @@ package per.pslilysm.filecleaner.entity
  * @since 1.0
  */
 data class StorageStat(
-    val storageUsedSize: Long,
-    val storageAvailableSize: Long,
-    val storageTotalSize: Long,
+    val usedSize: Long,
+    val availableSize: Long,
+    val totalSize: Long,
 )

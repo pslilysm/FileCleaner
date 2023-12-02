@@ -14,10 +14,10 @@ import java.util.concurrent.atomic.AtomicLong
  */
 data class FileScanResult(
     val fileQueue: ConcurrentLinkedQueue<File> = ConcurrentLinkedQueue(),
-    val queueFileSize: AtomicLong = AtomicLong(0)
+    val queueSize: AtomicLong = AtomicLong(0)
 ) {
     fun offerFileAndAddFileSize(file: File) {
         fileQueue.offer(file)
-        queueFileSize.getAndAdd(Files.size(file.toPath()))
+        queueSize.getAndAdd(Files.size(file.toPath()))
     }
 }

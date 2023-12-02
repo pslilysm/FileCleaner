@@ -1,7 +1,7 @@
 package per.pslilysm.filecleaner.ui.i
 
 import androidx.lifecycle.LifecycleOwner
-import per.pslilysm.filecleaner.entity.StorageScanResultSummary
+import per.pslilysm.filecleaner.entity.StorageScanResult
 
 /**
  * 存储分析UI接口
@@ -15,8 +15,8 @@ interface StorageAnalysisUI: LifecycleOwner {
     /**
      * Refresh storage analysis ui
      *
-     * @param storageScanResultSummary the data to show in UI
+     * @param storageScanResult the data to show in UI
      */
-    fun refreshStorageAnalysisUI(storageScanResultSummary: StorageScanResultSummary)
+    fun refreshStorageAnalysisUI(storageScanResult: StorageScanResult)
 
 }
