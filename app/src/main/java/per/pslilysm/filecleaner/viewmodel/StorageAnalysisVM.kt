@@ -3,6 +3,7 @@ package per.pslilysm.filecleaner.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import per.pslilysm.filecleaner.R
@@ -21,6 +22,7 @@ import javax.inject.Inject
  * Created on 2023/11/30 15:28
  * @since 1.0
  */
+@HiltViewModel
 class StorageAnalysisVM @Inject constructor(
     private val storageAnalysisModel: StorageAnalysisModel
 ) : ViewModel() {

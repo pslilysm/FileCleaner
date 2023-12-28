@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <attr name="fileSizeToText" format="reference"/>
-    <attr name="fileSizeToTextDefaultComputing" format="reference"/>
-    <attr name="fileCountToTextDefaultComputing" format="reference"/>
-    <attr name="dataAndColorArray" format="reference"/>
-</resources>

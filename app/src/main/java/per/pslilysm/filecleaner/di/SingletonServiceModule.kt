@@ -1,7 +1,9 @@
-package per.pslilysm.filecleaner.dagger
+package per.pslilysm.filecleaner.di
 
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import per.pslilysm.filecleaner.service.AppScanService
 import per.pslilysm.filecleaner.service.FileScanService
 import per.pslilysm.filecleaner.service.impl.AppScanServiceImpl
@@ -16,7 +18,8 @@ import javax.inject.Singleton
  * @since 1.0
  */
 @Module
-class ServiceModule {
+@InstallIn(value = [SingletonComponent::class])
+class SingletonServiceModule {
 
     @Provides
     @Singleton
