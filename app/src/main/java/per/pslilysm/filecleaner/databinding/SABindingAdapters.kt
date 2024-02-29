@@ -4,7 +4,7 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import per.pslilysm.filecleaner.R
 import per.pslilysm.filecleaner.ui.widget.StorageAnalysisBar
-import pers.pslilysm.sdk_library.extention.autoFormatFileSize
+import per.pslilysm.sdk_library.extention.autoFormatFileSize
 
 /**
  * Storage Analysis DataBinding适配器

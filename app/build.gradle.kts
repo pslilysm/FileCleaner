@@ -80,9 +80,10 @@ dependencies {
 
     // lifecycle
     // no need to proguard
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+    val lifecycleVersion = "2.7.0"
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
 
     // dagger
     // no need to proguard
@@ -91,7 +92,7 @@ dependencies {
 
     // add sdk-ktx to your dependencies
     // proguard bundled in aar
-    implementation("com.github.pslilysm:sdk-ktx:2.2.9")
+    implementation("com.github.pslilysm:sdk-ktx:2.3.5")
 
     // 权限请求框架：https://github.com/getActivity/XXPermissions
     // no need to proguard
@@ -99,6 +100,6 @@ dependencies {
 
     // https://mvnrepository.com/artifact/commons-io/commons-io
     // no need to proguard
-    implementation("commons-io:commons-io:2.15.1")
+//    implementation("commons-io:commons-io:2.15.1")
 
 }
