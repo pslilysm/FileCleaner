@@ -3,12 +3,13 @@ package per.pslilysm.filecleaner.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import per.pslilysm.filecleaner.R
 import per.pslilysm.filecleaner.entity.StorageScanResult
 import per.pslilysm.filecleaner.model.StorageAnalysisModel
-import pers.pslilysm.sdk_library.AppHolder
+import per.pslilysm.sdk_library.app
 import java.util.concurrent.CancellationException
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
@@ -21,6 +22,7 @@ import javax.inject.Inject
  * Created on 2023/11/30 15:28
  * @since 1.0
  */
+@HiltViewModel
 class StorageAnalysisVM @Inject constructor(
     private val storageAnalysisModel: StorageAnalysisModel
 ) : ViewModel() {
@@ -71,17 +73,17 @@ class StorageAnalysisVM @Inject constructor(
                 scanResult.postValue(storageScanResult)
                 sabData.postValue(
                     arrayOf(
-                        (appResult.queueSize.get() * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.ff00bcd4),
-                        (fileResult.image.queueSize.get() * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.fff08273),
-                        (fileResult.video.queueSize.get() * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.ffc897f0),
-                        (fileResult.audio.queueSize.get() * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.ff8cb2fc),
-                        (fileResult.document.queueSize.get() * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.ffceaf81),
-                        (fileResult.apkFile.queueSize.get() * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.ffa5d934),
-                        (fileResult.compressedFile.queueSize.get() * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.ff94a6be),
-                        (fileResult.emptyDir.queueSize.get() * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.ff55afb7),
-                        (fileResult.noExt.queueSize.get() * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.ff4673ab),
-                        (fileResult.unknownExt.queueSize.get() * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.ff8ea9bc),
-                        (storageScanResult.other!! * 1000 / storageTotalSize / 1000f) to AppHolder.get().getColor(R.color.ff868895),
+                        (appResult.queueSize.get() * 1000 / storageTotalSize / 1000f) to app.getColor(R.color.ff00bcd4),
+                        (fileResult.image.queueSize.get() * 1000 / storageTotalSize / 1000f) to app.getColor(R.color.fff08273),
+                        (fileResult.video.queueSize.get() * 1000 / storageTotalSize / 1000f) to app.getColor(R.color.ffc897f0),
+                        (fileResult.audio.queueSize.get() * 1000 / storageTotalSize / 1000f) to app.getColor(R.color.ff8cb2fc),
+                        (fileResult.document.queueSize.get() * 1000 / storageTotalSize / 1000f) to app.getColor(R.color.ffceaf81),
+                        (fileResult.apkFile.queueSize.get() * 1000 / storageTotalSize / 1000f) to app.getColor(R.color.ffa5d934),
+                        (fileResult.compressedFile.queueSize.get() * 1000 / storageTotalSize / 1000f) to app.getColor(R.color.ff94a6be),
+                        (fileResult.emptyDir.queueSize.get() * 1000 / storageTotalSize / 1000f) to app.getColor(R.color.ff55afb7),
+                        (fileResult.noExt.queueSize.get() * 1000 / storageTotalSize / 1000f) to app.getColor(R.color.ff4673ab),
+                        (fileResult.unknownExt.queueSize.get() * 1000 / storageTotalSize / 1000f) to app.getColor(R.color.ff8ea9bc),
+                        (storageScanResult.other!! * 1000 / storageTotalSize / 1000f) to app.getColor(R.color.ff868895),
                     )
                 )
             }

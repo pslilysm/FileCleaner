@@ -5,13 +5,13 @@ import android.content.pm.ApplicationInfo
 import android.os.SystemClock
 import android.os.storage.StorageManager
 import android.util.Log
-import per.pslilysm.filecleaner.entity.AppScanResultSummary
 import per.pslilysm.filecleaner.entity.AppScanResult
+import per.pslilysm.filecleaner.entity.AppScanResultSummary
 import per.pslilysm.filecleaner.extension.totalSize
 import per.pslilysm.filecleaner.service.AppScanService
-import pers.pslilysm.sdk_library.AppHolder
-import pers.pslilysm.sdk_library.extention.throwIfMainThread
-import pers.pslilysm.sdk_library.util.concurrent.ExecutorsLinkedBlockingQueue
+import per.pslilysm.sdk_library.app
+import per.pslilysm.sdk_library.extention.throwIfMainThread
+import per.pslilysm.sdk_library.util.concurrent.ExecutorsLinkedBlockingQueue
 import java.io.File
 import java.util.concurrent.CancellationException
 import java.util.concurrent.CountDownLatch
@@ -70,10 +70,9 @@ class AppScanServiceImpl : AppScanService {
         Log.i(TAG, "startScan: prepare")
         val l = SystemClock.elapsedRealtime()
         val appScanResultSummary = AppScanResultSummary()
-        val context = AppHolder.get()
-        val pkgManager = context.packageManager
-        val storageService = AppHolder.get().getSystemService(StorageManager::class.java)
-        val storageStatService = AppHolder.get().getSystemService(StorageStatsManager::class.java)
+        val pkgManager = app.packageManager
+        val storageService = app.getSystemService(StorageManager::class.java)
+        val storageStatService = app.getSystemService(StorageStatsManager::class.java)
         val applicationInfoList = pkgManager.getInstalledApplications(0).apply {
             removeIf(Predicate {
                 return@Predicate it.flags and ApplicationInfo.FLAG_SYSTEM == ApplicationInfo.FLAG_SYSTEM
@@ -85,7 +84,7 @@ class AppScanServiceImpl : AppScanService {
             ioExecutors.execute {
                 try {
                     val pkgName = applicationInfo.packageName
-                    val path = File(AppHolder.get().dataDir.parent, pkgName)
+                    val path = File(app.dataDir.parent, pkgName)
                     val uuid = storageService.getUuidForPath(path)
                     val appStats = storageStatService.queryStatsForUid(uuid, applicationInfo.uid)
                     val appScanResult = AppScanResult(

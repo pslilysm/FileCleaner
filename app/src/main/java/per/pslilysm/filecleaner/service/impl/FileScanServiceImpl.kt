@@ -6,8 +6,8 @@ import android.util.Log
 import per.pslilysm.filecleaner.entity.FileScanResultSummary
 import per.pslilysm.filecleaner.service.FileScanService
 import per.pslilysm.filecleaner.service.FileScanServiceConfig
-import pers.pslilysm.sdk_library.extention.throwIfMainThread
-import pers.pslilysm.sdk_library.util.concurrent.ExecutorsLinkedBlockingQueue
+import per.pslilysm.sdk_library.extention.throwIfMainThread
+import per.pslilysm.sdk_library.util.concurrent.ExecutorsLinkedBlockingQueue
 import java.io.File
 import java.util.concurrent.CancellationException
 import java.util.concurrent.RejectedExecutionException

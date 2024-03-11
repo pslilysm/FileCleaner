@@ -2,13 +2,13 @@ package per.pslilysm.filecleaner.ui.activity
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
-import per.pslilysm.filecleaner.dagger.FCAppComponent
+import dagger.hilt.android.AndroidEntryPoint
 import per.pslilysm.filecleaner.databinding.ActivityStorageAnalysisBinding
 import per.pslilysm.filecleaner.viewmodel.StorageAnalysisVM
-import javax.inject.Inject
 
 
 /**
@@ -18,15 +18,14 @@ import javax.inject.Inject
  * Created on 2023/10/23 16:03
  * @since 1.0
  */
+@AndroidEntryPoint
 class StorageAnalysisActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivityStorageAnalysisBinding
 
-    @Inject
-    lateinit var storageAnalysisVM: StorageAnalysisVM
+    private val storageAnalysisVM: StorageAnalysisVM by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        FCAppComponent.instance.injectMainActivity(this)
         super.onCreate(savedInstanceState)
         binding = ActivityStorageAnalysisBinding.inflate(layoutInflater).apply {
             vm = storageAnalysisVM

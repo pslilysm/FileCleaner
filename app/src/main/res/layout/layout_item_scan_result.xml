@@ -60,7 +60,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="8dp"
                     android:textSize="14sp"
-                    app:fileSizeToTextDefaultComputing="@{DataBindingExtKt.getBoxed(vm.scanResult.app.queueSize)}"
+                    fileSizeToTextDefaultComputing="@{DataBindingExtKt.getBoxed(vm.scanResult.app.queueSize)}"
                     tools:text="8.22 GB" />
 
                 <ImageView
@@ -117,7 +117,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="8dp"
                     android:textSize="14sp"
-                    app:fileSizeToTextDefaultComputing="@{DataBindingExtKt.getBoxed(vm.scanResult.file.image.queueSize)}"
+                    fileSizeToTextDefaultComputing="@{DataBindingExtKt.getBoxed(vm.scanResult.file.image.queueSize)}"
                     tools:text="8.22 GB" />
 
                 <ImageView
@@ -174,7 +174,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="8dp"
                     android:textSize="14sp"
-                    app:fileSizeToTextDefaultComputing="@{DataBindingExtKt.getBoxed(vm.scanResult.file.video.queueSize)}"
+                    fileSizeToTextDefaultComputing="@{DataBindingExtKt.getBoxed(vm.scanResult.file.video.queueSize)}"
                     tools:text="8.22 GB" />
 
                 <ImageView
@@ -231,7 +231,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="8dp"
                     android:textSize="14sp"
-                    app:fileSizeToTextDefaultComputing="@{DataBindingExtKt.getBoxed(vm.scanResult.file.audio.queueSize)}"
+                    fileSizeToTextDefaultComputing="@{DataBindingExtKt.getBoxed(vm.scanResult.file.audio.queueSize)}"
                     tools:text="8.22 GB" />
 
                 <ImageView
@@ -288,7 +288,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="8dp"
                     android:textSize="14sp"
-                    app:fileSizeToTextDefaultComputing="@{DataBindingExtKt.getBoxed(vm.scanResult.file.document.queueSize)}"
+                    fileSizeToTextDefaultComputing="@{DataBindingExtKt.getBoxed(vm.scanResult.file.document.queueSize)}"
                     tools:text="8.22 GB" />
 
                 <ImageView
@@ -345,7 +345,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="8dp"
                     android:textSize="14sp"
-                    app:fileSizeToTextDefaultComputing="@{DataBindingExtKt.getBoxed(vm.scanResult.file.apkFile.queueSize)}"
+                    fileSizeToTextDefaultComputing="@{DataBindingExtKt.getBoxed(vm.scanResult.file.apkFile.queueSize)}"
                     tools:text="8.22 GB" />
 
                 <ImageView
@@ -402,7 +402,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="8dp"
                     android:textSize="14sp"
-                    app:fileSizeToTextDefaultComputing="@{DataBindingExtKt.getBoxed(vm.scanResult.file.compressedFile.queueSize)}"
+                    fileSizeToTextDefaultComputing="@{DataBindingExtKt.getBoxed(vm.scanResult.file.compressedFile.queueSize)}"
                     tools:text="8.22 GB" />
 
                 <ImageView
@@ -516,7 +516,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="8dp"
                     android:textSize="14sp"
-                    app:fileSizeToTextDefaultComputing="@{DataBindingExtKt.getBoxed(vm.scanResult.file.noExt.queueSize)}"
+                    fileSizeToTextDefaultComputing="@{DataBindingExtKt.getBoxed(vm.scanResult.file.noExt.queueSize)}"
                     tools:text="8.22 GB" />
 
                 <ImageView
@@ -573,7 +573,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="8dp"
                     android:textSize="14sp"
-                    app:fileSizeToTextDefaultComputing="@{DataBindingExtKt.getBoxed(vm.scanResult.file.unknownExt.queueSize)}"
+                    fileSizeToTextDefaultComputing="@{DataBindingExtKt.getBoxed(vm.scanResult.file.unknownExt.queueSize)}"
                     tools:text="8.22 GB" />
 
                 <ImageView
@@ -630,7 +630,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="8dp"
                     android:textSize="14sp"
-                    app:fileSizeToTextDefaultComputing="@{vm.scanResult.other}"
+                    fileSizeToTextDefaultComputing="@{vm.scanResult.other}"
                     tools:text="8.22 GB" />
 
                 <ImageView
