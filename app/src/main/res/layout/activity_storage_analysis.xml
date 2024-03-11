@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -11,15 +12,12 @@
             type="per.pslilysm.filecleaner.viewmodel.StorageAnalysisVM" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <TextView
-            android:id="@+id/tv_main_title"
+            android:id="@+id/tv_sa_title"
             style="@style/TextAppearance.MaterialComponents.Headline6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,14 +34,14 @@
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_main_title">
+            app:layout_constraintTop_toBottomOf="@id/tv_sa_title">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/tv_main_internal_storage"
+                    android:id="@+id/tv_sa_internal_storage"
                     style="@style/TextAppearance.MaterialComponents.Body1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -54,15 +52,15 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/tv_main_used_percent_value"
+                    android:id="@+id/tv_sa_used_percent_value"
                     style="@style/TextAppearance.MaterialComponents.Headline5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@{vm.scanResult.stat != null ? String.valueOf(vm.scanResult.stat.usedSize * 100 / vm.scanResult.stat.totalSize) + @string/percent : null}"
                     android:textSize="30sp"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="@id/tv_main_internal_storage"
-                    app:layout_constraintTop_toBottomOf="@id/tv_main_internal_storage"
+                    app:layout_constraintStart_toStartOf="@id/tv_sa_internal_storage"
+                    app:layout_constraintTop_toBottomOf="@id/tv_sa_internal_storage"
                     tools:text="66%" />
 
                 <TextView
@@ -71,50 +69,50 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="@string/common_used_lc"
-                    app:layout_constraintBaseline_toBaselineOf="@id/tv_main_used_percent_value"
-                    app:layout_constraintStart_toEndOf="@id/tv_main_used_percent_value" />
+                    app:layout_constraintBaseline_toBaselineOf="@id/tv_sa_used_percent_value"
+                    app:layout_constraintStart_toEndOf="@id/tv_sa_used_percent_value" />
 
                 <TextView
-                    android:id="@+id/tv_main_scan_cost"
+                    android:id="@+id/tv_sa_scan_cost"
                     style="@style/TextAppearance.MaterialComponents.Body2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="24dp"
                     android:text="@{vm.scanResult.file != null ? @string/scan_cost(vm.scanResult.file.scanCost) : null}"
-                    app:layout_constraintBaseline_toBaselineOf="@id/tv_main_used_percent_value"
+                    app:layout_constraintBaseline_toBaselineOf="@id/tv_sa_used_percent_value"
                     app:layout_constraintEnd_toEndOf="parent" />
 
                 <TextView
-                    android:id="@+id/tv_main_storage_used_size_value"
+                    android:id="@+id/tv_sa_storage_used_size_value"
                     style="@style/TextAppearance.MaterialComponents.Body2"
+                    fileSizeToText="@{DataBindingExtKt.usedSize(vm.scanResult.stat)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="16dp"
-                    fileSizeToText="@{DataBindingExtKt.usedSize(vm.scanResult.stat)}"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_main_used_percent_value"
+                    app:layout_constraintTop_toBottomOf="@id/tv_sa_used_percent_value"
                     tools:text="128 GB" />
 
                 <TextView
-                    android:id="@+id/tv_main_storage_total_size_value"
+                    android:id="@+id/tv_sa_storage_total_size_value"
                     style="@style/TextAppearance.MaterialComponents.Body2"
+                    fileSizeToText="@{DataBindingExtKt.totalSize(vm.scanResult.stat)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="24dp"
-                    fileSizeToText="@{DataBindingExtKt.totalSize(vm.scanResult.stat)}"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_main_storage_used_size_value"
+                    app:layout_constraintTop_toTopOf="@id/tv_sa_storage_used_size_value"
                     tools:text="256 GB" />
 
                 <per.pslilysm.filecleaner.ui.widget.StorageAnalysisBar
                     android:id="@+id/sab_main"
+                    dataAndColorArray="@{vm.sabData}"
                     android:layout_width="match_parent"
                     android:layout_height="24dp"
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="6dp"
-                    dataAndColorArray="@{vm.sabData}"
-                    app:layout_constraintTop_toBottomOf="@id/tv_main_storage_used_size_value" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_sa_storage_used_size_value" />
 
                 <include
                     android:id="@+id/layout_item_scan_result"

@@ -33,7 +33,7 @@ interface FileScanServiceConfig {
         /**
          * Apk File Suffix
          */
-        val apkFileExt = "apk"
+        const val apkFileExt = "apk"
 
         /**
          * Compressed File Suffix Set

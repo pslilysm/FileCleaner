@@ -32,36 +32,24 @@ class StorageAnalysisActivity : AppCompatActivity(), View.OnClickListener {
             lifecycleOwner = this@StorageAnalysisActivity
             layoutItemScanResult.apply {
                 vm = storageAnalysisVM
+                activity = this@StorageAnalysisActivity
                 lifecycleOwner = this@StorageAnalysisActivity
+            }
+            layoutUnusedApps.apply {
+                activity = this@StorageAnalysisActivity
+            }
+            layoutLargeFiles.apply {
+                activity = this@StorageAnalysisActivity
             }
         }.also {
             setContentView(it.root)
         }
-        binding.layoutItemScanResult.llMainAppSizeContainer.setOnClickListener(this)
-        binding.layoutItemScanResult.llMainImageSizeContainer.setOnClickListener(this)
-        binding.layoutItemScanResult.llMainVideoSizeContainer.setOnClickListener(this)
-        binding.layoutItemScanResult.llMainAudioSizeContainer.setOnClickListener(this)
-        binding.layoutItemScanResult.llMainDocumentSizeContainer.setOnClickListener(this)
-        binding.layoutItemScanResult.llMainApkFileSizeContainer.setOnClickListener(this)
-        binding.layoutItemScanResult.llMainCompressedFileSizeContainer.setOnClickListener(this)
-        binding.layoutItemScanResult.llMainEmptyDirSizeContainer.setOnClickListener(this)
-        binding.layoutItemScanResult.llMainNoExtFileSizeContainer.setOnClickListener(this)
-        binding.layoutItemScanResult.llMainUnknownExtFileSizeContainer.setOnClickListener(this)
-        binding.layoutItemScanResult.llMainOtherSizeContainer.setOnClickListener(this)
-
-        binding.layoutUnusedApps.clUnusedAppsTitleContainer.setOnClickListener(this)
-        binding.layoutUnusedApps.clUnusedApps1.setOnClickListener(this)
-        binding.layoutUnusedApps.clUnusedApps2.setOnClickListener(this)
-        binding.layoutUnusedApps.clUnusedApps3.setOnClickListener(this)
-        binding.layoutUnusedApps.clUnusedApps4.setOnClickListener(this)
-
-        binding.layoutLargeFiles.clLargeFilesTitleContainer.setOnClickListener(this)
     }
 
     override fun onStart() {
         super.onStart()
         XXPermissions.with(this)
-            .permission(Permission.MANAGE_EXTERNAL_STORAGE, Permission.PACKAGE_USAGE_STATS)
+            .permission(Permission.MANAGE_EXTERNAL_STORAGE, Permission.PACKAGE_USAGE_STATS, Permission.GET_INSTALLED_APPS)
             .request { _, allGranted ->
                 if (allGranted) {
                     storageAnalysisVM.startScanStorage()

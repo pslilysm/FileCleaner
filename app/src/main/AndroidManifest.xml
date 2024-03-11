@@ -14,8 +14,6 @@
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
 
-    <queries android:name="android.permission.QUERY_ALL_PACKAGES" />
-
     <application
         android:name=".FileCleanerApp"
         android:allowBackup="true"

@@ -1,6 +1,5 @@
 package per.pslilysm.filecleaner.databinding
 
-import android.util.Log
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import per.pslilysm.filecleaner.R
@@ -8,14 +7,12 @@ import per.pslilysm.filecleaner.ui.widget.StorageAnalysisBar
 import per.pslilysm.sdk_library.extention.autoFormatFileSize
 
 /**
- * DataBinding适配器
+ * Storage Analysis DataBinding适配器
  *
  * @author caoxuedong
  * Created on 2023/12/02 20:32
  * @since 1.0
  */
-
-private const val TAG = "BindingAdapters"
 
 @BindingAdapter("fileSizeToText")
 fun fileSizeToText(textView: TextView, size: Long?) {
@@ -24,10 +21,6 @@ fun fileSizeToText(textView: TextView, size: Long?) {
 
 @BindingAdapter("fileSizeToTextDefaultComputing")
 fun fileSizeToTextDefaultComputing(textView: TextView, size: Long?) {
-    Log.d(
-        TAG, "set() called with: id = " +
-                "${textView.resources.getResourceName(textView.id).substringAfter("/")}, size = $size"
-    )
     textView.text = size?.autoFormatFileSize() ?: textView.context.getString(R.string.common_computing)
 }
 

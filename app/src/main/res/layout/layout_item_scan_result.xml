@@ -10,6 +10,10 @@
         <variable
             name="vm"
             type="per.pslilysm.filecleaner.viewmodel.StorageAnalysisVM" />
+
+        <variable
+            name="activity"
+            type="per.pslilysm.filecleaner.ui.activity.StorageAnalysisActivity" />
     </data>
 
     <LinearLayout
@@ -27,9 +31,10 @@
             app:cardElevation="0dp">
 
             <LinearLayout
-                android:id="@+id/ll_main_app_size_container"
+                android:id="@+id/ll_sr_app_size_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:onClick="@{activity::onClick}"
                 android:background="?attr/selectableItemBackground"
                 android:orientation="horizontal">
 
@@ -53,7 +58,7 @@
                     android:text="@string/common_app" />
 
                 <TextView
-                    android:id="@+id/tv_main_app_size"
+                    android:id="@+id/tv_sr_app_size"
                     style="@style/TextAppearance.MaterialComponents.Subtitle2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -67,7 +72,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="@string/image_content_desc_arrow_right"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/round_keyboard_arrow_right_24" />
 
             </LinearLayout>
@@ -84,9 +89,10 @@
             app:cardElevation="0dp">
 
             <LinearLayout
-                android:id="@+id/ll_main_image_size_container"
+                android:id="@+id/ll_sr_image_size_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:onClick="@{activity::onClick}"
                 android:background="?attr/selectableItemBackground"
                 android:orientation="horizontal">
 
@@ -110,7 +116,7 @@
                     android:text="@string/common_image" />
 
                 <TextView
-                    android:id="@+id/tv_main_image_size"
+                    android:id="@+id/tv_sr_image_size"
                     style="@style/TextAppearance.MaterialComponents.Subtitle2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -124,7 +130,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="@string/image_content_desc_arrow_right"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/round_keyboard_arrow_right_24" />
 
             </LinearLayout>
@@ -141,9 +147,10 @@
             app:cardElevation="0dp">
 
             <LinearLayout
-                android:id="@+id/ll_main_video_size_container"
+                android:id="@+id/ll_sr_video_size_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:onClick="@{activity::onClick}"
                 android:background="?attr/selectableItemBackground"
                 android:orientation="horizontal">
 
@@ -167,7 +174,7 @@
                     android:text="@string/common_video" />
 
                 <TextView
-                    android:id="@+id/tv_main_video_size"
+                    android:id="@+id/tv_sr_video_size"
                     style="@style/TextAppearance.MaterialComponents.Subtitle2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -181,7 +188,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="@string/image_content_desc_arrow_right"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/round_keyboard_arrow_right_24" />
 
             </LinearLayout>
@@ -198,10 +205,11 @@
             app:cardElevation="0dp">
 
             <LinearLayout
-                android:id="@+id/ll_main_audio_size_container"
+                android:id="@+id/ll_sr_audio_size_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
+                android:onClick="@{activity::onClick}"
                 android:orientation="horizontal">
 
                 <androidx.cardview.widget.CardView
@@ -224,7 +232,7 @@
                     android:text="@string/common_audio" />
 
                 <TextView
-                    android:id="@+id/tv_main_audio_size"
+                    android:id="@+id/tv_sr_audio_size"
                     style="@style/TextAppearance.MaterialComponents.Subtitle2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -238,7 +246,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="@string/image_content_desc_arrow_right"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/round_keyboard_arrow_right_24" />
 
             </LinearLayout>
@@ -255,10 +263,11 @@
             app:cardElevation="0dp">
 
             <LinearLayout
-                android:id="@+id/ll_main_document_size_container"
+                android:id="@+id/ll_sr_document_size_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
+                android:onClick="@{activity::onClick}"
                 android:orientation="horizontal">
 
                 <androidx.cardview.widget.CardView
@@ -281,7 +290,7 @@
                     android:text="@string/common_document" />
 
                 <TextView
-                    android:id="@+id/tv_main_document_size"
+                    android:id="@+id/tv_sr_document_size"
                     style="@style/TextAppearance.MaterialComponents.Subtitle2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -295,7 +304,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="@string/image_content_desc_arrow_right"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/round_keyboard_arrow_right_24" />
 
             </LinearLayout>
@@ -312,10 +321,11 @@
             app:cardElevation="0dp">
 
             <LinearLayout
-                android:id="@+id/ll_main_apk_file_size_container"
+                android:id="@+id/ll_sr_apk_file_size_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
+                android:onClick="@{activity::onClick}"
                 android:orientation="horizontal">
 
                 <androidx.cardview.widget.CardView
@@ -338,7 +348,7 @@
                     android:text="@string/common_apk_file" />
 
                 <TextView
-                    android:id="@+id/tv_main_apk_file_size"
+                    android:id="@+id/tv_sr_apk_file_size"
                     style="@style/TextAppearance.MaterialComponents.Subtitle2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -352,7 +362,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="@string/image_content_desc_arrow_right"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/round_keyboard_arrow_right_24" />
 
             </LinearLayout>
@@ -369,10 +379,11 @@
             app:cardElevation="0dp">
 
             <LinearLayout
-                android:id="@+id/ll_main_compressed_file_size_container"
+                android:id="@+id/ll_sr_compressed_file_size_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
+                android:onClick="@{activity::onClick}"
                 android:orientation="horizontal">
 
                 <androidx.cardview.widget.CardView
@@ -395,7 +406,7 @@
                     android:text="@string/common_compressed_file" />
 
                 <TextView
-                    android:id="@+id/tv_main_compressed_file_size"
+                    android:id="@+id/tv_sr_compressed_file_size"
                     style="@style/TextAppearance.MaterialComponents.Subtitle2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -409,7 +420,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="@string/image_content_desc_arrow_right"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/round_keyboard_arrow_right_24" />
 
             </LinearLayout>
@@ -426,10 +437,11 @@
             app:cardElevation="0dp">
 
             <LinearLayout
-                android:id="@+id/ll_main_empty_dir_size_container"
+                android:id="@+id/ll_sr_empty_dir_size_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
+                android:onClick="@{activity::onClick}"
                 android:orientation="horizontal">
 
                 <androidx.cardview.widget.CardView
@@ -452,22 +464,22 @@
                     android:text="@string/common_empty_dir" />
 
                 <TextView
-                    android:id="@+id/tv_main_empty_dir_size"
+                    android:id="@+id/tv_sr_empty_dir_size"
                     style="@style/TextAppearance.MaterialComponents.Subtitle2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="8dp"
                     android:textSize="14sp"
-                    app:fileCountToTextDefaultComputing="@{DataBindingExtKt.sizeBoxed(vm.scanResult.file.emptyDir.fileQueue)}"
+                    fileCountToTextDefaultComputing="@{DataBindingExtKt.sizeBoxed(vm.scanResult.file.emptyDir.fileQueue)}"
                     tools:text="8.22 GB" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="@string/image_content_desc_arrow_right"
-                    android:src="@drawable/round_keyboard_arrow_right_24" />
+                    android:src="@drawable/round_keyboard_arrow_right_24"
+                    android:importantForAccessibility="no" />
 
             </LinearLayout>
 
@@ -483,10 +495,11 @@
             app:cardElevation="0dp">
 
             <LinearLayout
-                android:id="@+id/ll_main_no_ext_file_size_container"
+                android:id="@+id/ll_sr_no_ext_file_size_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
+                android:onClick="@{activity::onClick}"
                 android:orientation="horizontal">
 
                 <androidx.cardview.widget.CardView
@@ -509,7 +522,7 @@
                     android:text="@string/common_no_ext_file" />
 
                 <TextView
-                    android:id="@+id/tv_main_no_ext_file_size"
+                    android:id="@+id/tv_sr_no_ext_file_size"
                     style="@style/TextAppearance.MaterialComponents.Subtitle2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -523,8 +536,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="@string/image_content_desc_arrow_right"
-                    android:src="@drawable/round_keyboard_arrow_right_24" />
+                    android:src="@drawable/round_keyboard_arrow_right_24"
+                    android:importantForAccessibility="no" />
 
             </LinearLayout>
 
@@ -540,10 +553,11 @@
             app:cardElevation="0dp">
 
             <LinearLayout
-                android:id="@+id/ll_main_unknown_ext_file_size_container"
+                android:id="@+id/ll_sr_unknown_ext_file_size_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
+                android:onClick="@{activity::onClick}"
                 android:orientation="horizontal">
 
                 <androidx.cardview.widget.CardView
@@ -566,7 +580,7 @@
                     android:text="@string/common_unknown_ext_file" />
 
                 <TextView
-                    android:id="@+id/tv_main_unknown_ext_file_size"
+                    android:id="@+id/tv_sr_unknown_ext_file_size"
                     style="@style/TextAppearance.MaterialComponents.Subtitle2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -580,7 +594,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="@string/image_content_desc_arrow_right"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/round_keyboard_arrow_right_24" />
 
             </LinearLayout>
@@ -597,10 +611,11 @@
             app:cardElevation="0dp">
 
             <LinearLayout
-                android:id="@+id/ll_main_other_size_container"
+                android:id="@+id/ll_sr_other_size_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
+                android:onClick="@{activity::onClick}"
                 android:orientation="horizontal">
 
                 <androidx.cardview.widget.CardView
@@ -623,7 +638,7 @@
                     android:text="@string/common_other" />
 
                 <TextView
-                    android:id="@+id/tv_main_other_size"
+                    android:id="@+id/tv_sr_other_size"
                     style="@style/TextAppearance.MaterialComponents.Subtitle2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -637,7 +652,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="@string/image_content_desc_arrow_right"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/round_keyboard_arrow_right_24" />
 
             </LinearLayout>

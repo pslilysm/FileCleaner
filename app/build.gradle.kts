@@ -86,7 +86,7 @@ dependencies {
     implementation("com.github.pslilysm:sdk-ktx:2.3.5")
 
     // 权限请求框架：https://github.com/getActivity/XXPermissions
-    implementation("com.github.getActivity:XXPermissions:18.5")
+    implementation("com.github.getActivity:XXPermissions:18.6")
 
     // https://mvnrepository.com/artifact/commons-io/commons-io
     implementation("commons-io:commons-io:2.15.0")
