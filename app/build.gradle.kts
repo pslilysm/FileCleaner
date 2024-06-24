@@ -71,25 +71,28 @@ fun timeNow(): String {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.11.0")
-    implementation("androidx.fragment:fragment-ktx:1.6.2")
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+
+    // lifecycle
+    // no need to proguard
+    implementation(libs.androidx.fragment.ktx)
 
     // dagger
     // no need proguard
-    implementation("com.google.dagger:hilt-android:2.51")
-    kapt("com.google.dagger:hilt-compiler:2.51")
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
 
     // add sdk-ktx to your dependencies
     // proguard bundled in aar
-    implementation("com.github.pslilysm:sdk-ktx:2.3.5")
+    implementation(libs.sdk.ktx)
 
     // 权限请求框架：https://github.com/getActivity/XXPermissions
-    implementation("com.github.getActivity:XXPermissions:18.6")
+    implementation(libs.xxpermissions)
 
     // https://mvnrepository.com/artifact/commons-io/commons-io
-    implementation("commons-io:commons-io:2.15.0")
+    implementation(libs.commons.io)
 
 }
 

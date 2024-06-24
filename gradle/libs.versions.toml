@@ -1,0 +1,28 @@
+[versions]
+agp = "8.4.2"
+appcompat = "1.7.0"
+commonsIo = "2.15.0"
+coreKtx = "1.13.1"
+fragmentKtx = "1.8.0"
+hiltAndroid = "2.51.1"
+kotlin = "1.9.0"
+material = "1.12.0"
+sdkKtx = "2.3.6"
+xxpermissions = "18.63"
+
+[libraries]
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
+commons-io = { module = "commons-io:commons-io", version.ref = "commonsIo" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+sdk-ktx = { module = "com.github.pslilysm:sdk-ktx", version.ref = "sdkKtx" }
+xxpermissions = { module = "com.github.getActivity:XXPermissions", version.ref = "xxpermissions" }
+
+[plugins]
+androidApplication = { id = "com.android.application", version.ref = "agp" }
+jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+hiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
+
